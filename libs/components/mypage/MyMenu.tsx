@@ -60,7 +60,7 @@ const MyMenu = () => {
 							MANAGE LISTINGS
 						</Typography>
 						<List className={'sub-section'}>
-							{user.memberType === 'AGENT' && (
+							{user.memberType === 'DEALER' && (
 								<>
 									<ListItem className={pathname === 'addProperty' ? 'focus' : ''}>
 										<Link
