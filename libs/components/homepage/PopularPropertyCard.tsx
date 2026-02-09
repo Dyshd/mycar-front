@@ -4,138 +4,125 @@ import IconButton from '@mui/material/IconButton';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Property } from '../../types/property/property';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import { REACT_APP_API_URL, topPropertyRank } from '../../config';
 import { useRouter } from 'next/router';
-import { useReactiveVar } from '@apollo/client';
-import { userVar } from '../../../apollo/store';
 
 interface PopularPropertyCardProps {
-	property: Property;
+  property: Property;
 }
 
 const PopularPropertyCard = (props: PopularPropertyCardProps) => {
-	const { property } = props;
-	const device = useDeviceDetect();
-	const router = useRouter();
-	const user = useReactiveVar(userVar);
+  const { property } = props;
+  const device = useDeviceDetect();
+  const router = useRouter();
 
-	/** HANDLERS **/
-	const pushDetailHandler = async (propertyId: string) => {
-		console.log("ID:", propertyId);
-		await router.push({
-			pathname: "/property/detail",
-			query: { id: propertyId },
-		});
-	};
-	if (device === 'mobile') {
-		return (
-			<Stack className="popular-card-box">
-				<Box
-					component={'div'}
-					className={'card-img'}
-					style={{ backgroundImage: `url(${REACT_APP_API_URL}${property?.propertyImages[0]})` }}
-					onClick={() => {
-						pushDetailHandler(property._id);
-					}}
-				>
-					{property?.propertyRank && property?.propertyRank >= topPropertyRank ? (
-						<div className={'status'}>
-							<img src="/img/icons/electricity.svg" alt="" />
-							<span>top</span>
-						</div>
-					) : (
-						''
-					)}
+  const pushDetailHandler = async (propertyId: string) => {
+    await router.push({ pathname: '/property/detail', query: { id: propertyId } });
+  };
 
-					<div className={'price'}>${property.propertyPrice}</div>
-				</Box>
-				<Box component={'div'} className={'info'}>
-					<strong className={'title'} onClick={() => {
-						pushDetailHandler(property._id);
-					}}> {property.propertyTitle}</strong>
-					<p className={'desc'}>{property.propertyAddress}</p>
-					<div className={'options'}>
-						<div>
-							<img src="/img/icons/bed.svg" alt="" />
-							<span>{property?.propertyBeds} bed</span>
-						</div>
-						<div>
-							<img src="/img/icons/room.svg" alt="" />
-							<span>{property?.propertyRooms} rooms</span>
-						</div>
-						<div>
-							<img src="/img/icons/expand.svg" alt="" />
-							<span>{property?.propertySquare} m2</span>
-						</div>
-					</div>
-					<Divider sx={{ mt: '15px', mb: '17px' }} />
-					<div className={'bott'}>
-						<p>{property?.propertyRent ? 'rent' : 'sale'}</p>
-						<div className="view-like-box">
-							<IconButton color={'default'}>
-								<RemoveRedEyeIcon />
-							</IconButton>
-							<Typography className="view-cnt">{property?.propertyViews}</Typography>
-						</div>
-					</div>
-				</Box>
-			</Stack>
-		);
-	} else {
-		return (
-			<Stack className="popular-card-box">
-				<Box
-					component={'div'}
-					className={'card-img'}
-					style={{ backgroundImage: `url(${REACT_APP_API_URL}${property?.propertyImages[0]})` }}
-					onClick={() => {
-						pushDetailHandler(property._id);
-					}}
-				>
-					{property && property?.propertyRank >= topPropertyRank ? (
-						<div className={'status'}>
-							<img src="/img/icons/electricity.svg" alt="" />
-							<span>top</span>
-						</div>
-					) : (
-						''
-					)}
+  const imgUrl = property?.propertyImages?.[0]
+    ? `${REACT_APP_API_URL}${property.propertyImages[0]}`
+    : '/img/property/default.jpg';
 
-					<div className={'price'}>${property.propertyPrice}</div>
-				</Box>
-				<Box component={'div'} className={'info'}>
-					<strong className={'title'} onClick={() => {
-						pushDetailHandler(property._id);
-					}}>{property.propertyTitle}</strong>
-					<p className={'desc'}>{property.propertyAddress}</p>
-					<div className={'options'}>
-						<div>
-							<img src="/img/icons/bed.svg" alt="" />
-							<span>{property?.propertyBeds} bed</span>
-						</div>
-						<div>
-							<img src="/img/icons/room.svg" alt="" />
-							<span>{property?.propertyRooms} rooms</span>
-						</div>
-						<div>
-							<img src="/img/icons/expand.svg" alt="" />
-							<span>{property?.propertySquare} m2</span>
-						</div>
-					</div>
-					<Divider sx={{ mt: '15px', mb: '17px' }} />
-					<div className={'bott'}>
-						<p>{property?.propertyRent ? 'rent' : 'sale'}</p>
-						<div className="view-like-box">
-							<IconButton color={'default'}>
-								<RemoveRedEyeIcon />
-							</IconButton>
-							<Typography className="view-cnt">{property?.propertyViews}</Typography>
-						</div>
-					</div>
-				</Box>
-			</Stack>
-		);
-	}
+  // backend o‘zgarmasin — faqat UI label-car
+  const seats = property?.propertyBeds ?? 0;
+  const doors = property?.propertyRooms ?? 0;
+  const km = property?.propertySquare ?? 0;
+
+  const views = property?.propertyViews ?? 0;
+  const likes = property?.propertyLikes ?? 0;
+
+  // Popular = views asosida
+  const isPopular = views >= 50;
+
+  // “rating”ni uydirmaymiz — views/likesdan hisoblaymiz (4.3..5.0)
+  const score = Math.min(5, Math.max(4.3, 4.3 + (views / 250)));
+  const trips = Math.max(1, Math.floor(views / 8));
+
+  // “Save” chip — views katta bo‘lsa
+  const save = views >= 60 ? Math.min(90, Math.floor(views / 2)) : 0;
+
+  return (
+    <Stack className={`popx-card ${device === 'mobile' ? 'is-mobile' : ''}`}>
+      {/* IMAGE */}
+      <Box
+        component="div"
+        className="popx-media"
+        style={{ backgroundImage: `url(${imgUrl})` }}
+        onClick={() => pushDetailHandler(property._id)}
+      >
+        {/* soft top badge */}
+        <div className="popx-topRow">
+          {property?.propertyRank && property?.propertyRank >= topPropertyRank ? (
+            <div className="popx-pill popx-pill-top">TOP</div>
+          ) : isPopular ? (
+            <div className="popx-pill popx-pill-hot">POPULAR</div>
+          ) : (
+            <div className="popx-pill popx-pill-new">NEW</div>
+          )}
+
+          {/* views badge */}
+          <div className="popx-views">
+            <RemoveRedEyeIcon className="eye" />
+            <span>{views}</span>
+          </div>
+        </div>
+
+        {/* bottom price strip */}
+        <div className="popx-priceStrip">
+          <span className="amount">${property?.propertyPrice ?? 0}</span>
+          <span className="per"> / day</span>
+        </div>
+      </Box>
+
+      {/* INFO */}
+      <Box component="div" className="popx-info">
+        <div className="popx-titleRow">
+          <strong className="popx-title" onClick={() => pushDetailHandler(property._id)}>
+            {property?.propertyTitle}
+          </strong>
+
+          <div className="popx-score">
+            <span className="star">★</span>
+            <span className="val">{score.toFixed(1)}</span>
+            <span className="trips">({trips} trips)</span>
+          </div>
+        </div>
+
+        <p className="popx-sub">
+          {property?.propertyAddress ? property.propertyAddress : 'Comfortable & clean'}
+        </p>
+
+        {/* chips */}
+        <div className="popx-chips">
+          <div className="chip">{seats} seats</div>
+          <div className="chip">{doors} doors</div>
+          <div className="chip">{km} km</div>
+        </div>
+
+        <Divider sx={{ mt: '12px', mb: '12px', opacity: 0.2 }} />
+
+        {/* bottom row */}
+        <div className="popx-bottom">
+          <div className="popx-left">
+            {save ? <div className="save">Save ${save}</div> : <div className="save muted">Good deal</div>}
+          </div>
+
+          <div className="popx-right">
+            <div className="likes">
+              <FavoriteIcon className="heart" />
+              <Typography className="cnt">{likes}</Typography>
+            </div>
+
+            <button className="popx-btn" type="button" onClick={() => pushDetailHandler(property._id)}>
+              Details
+            </button>
+          </div>
+        </div>
+      </Box>
+    </Stack>
+  );
 };
 
 export default PopularPropertyCard;

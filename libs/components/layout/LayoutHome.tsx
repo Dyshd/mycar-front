@@ -13,6 +13,7 @@ import Chat from '../Chat';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+import HeroVideo from '../common/FiberContainer';
 
 const withLayoutMain = (Component: any) => {
 	return (props: any) => {
@@ -31,8 +32,8 @@ const withLayoutMain = (Component: any) => {
 			return (
 				<>
 					<Head>
-						<title>Nestar</title>
-						<meta name={'title'} content={`Nestar`} />
+						<title>MyCar</title>
+						<meta name={'title'} content={`MyCar`} />
 					</Head>
 					<Stack id="mobile-wrap">
 						<Stack id={'top'}>
@@ -53,8 +54,8 @@ const withLayoutMain = (Component: any) => {
 			return (
 				<>
 					<Head>
-						<title>Nestar</title>
-						<meta name={'title'} content={`Nestar`} />
+						<title>MyCar</title>
+						<meta name={'title'} content={`MyCar`} />
 					</Head>
 					<Stack id="pc-wrap">
 						<Stack id={'top'}>
@@ -62,7 +63,7 @@ const withLayoutMain = (Component: any) => {
 						</Stack>
 
 						<Stack className={'header-main'}>
-							<FiberContainer />
+							<HeroVideo />
 							<Stack className={'container'}>
 								<HeaderFilter />
 							</Stack>

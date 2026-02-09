@@ -24,15 +24,9 @@ const TopProperties = (props: TopPropertiesProps) => {
 	const device = useDeviceDetect();
 	const [topProperties, setTopProperties] = useState<Property[]>([]);
 
-	/** APOLLO REQUESTS **/
 	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
 
-	const {
-		loading: getPropertiesLoading,
-		data: getPropertiesData,
-		error: getPropertiesError,
-		refetch: getPropertiesRefetch,
-	} = useQuery(GET_PROPERTIES, {
+	const { refetch: getPropertiesRefetch } = useQuery(GET_PROPERTIES, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
@@ -40,99 +34,85 @@ const TopProperties = (props: TopPropertiesProps) => {
 			setTopProperties(data?.getProperties?.list);
 		},
 	});
-	/** HANDLERS **/
+
 	const likePropertyHandler = async (user: T, id: string) => {
 		try {
 			if (!id) return;
 			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
 
 			await likeTargetProperty({ variables: { input: id } });
-
 			await getPropertiesRefetch({ input: initialInput });
-
-			await sweetTopSmallSuccessAlert("success", 800);
+			await sweetTopSmallSuccessAlert('success', 800);
 		} catch (err: any) {
-			console.log("ERROR, likePropertyHandler");
+			console.log('ERROR, likePropertyHandler');
 			sweetMixinErrorAlert(err.message).then();
 		}
 	};
+
 	if (device === 'mobile') {
 		return (
 			<Stack className={'top-properties'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
-						<span>Top properties</span>
+						<span>Top Cars</span>
 					</Stack>
+
 					<Stack className={'card-box'}>
 						<Swiper
 							className={'top-property-swiper'}
 							slidesPerView={'auto'}
 							centeredSlides={true}
-							spaceBetween={15}
+							spaceBetween={16}
 							modules={[Autoplay]}
 						>
-							{topProperties.map((property: Property) => {
-								return (
-									<SwiperSlide className={'top-property-slide'} key={property?._id}>
-										<TopPropertyCard
-											property={property}
-											likePropertyHandler={likePropertyHandler}
-										/>
-									</SwiperSlide>
-								);
-							})}
-						</Swiper>
-					</Stack>
-				</Stack>
-			</Stack>
-		);
-	} else {
-		return (
-			<Stack className={'top-properties'}>
-				<Stack className={'container'}>
-					<Stack className={'info-box'}>
-						<Box component={'div'} className={'left'}>
-							<span>Top properties</span>
-							<p>Check out our Top Properties</p>
-						</Box>
-						<Box component={'div'} className={'right'}>
-							<div className={'pagination-box'}>
-								<WestIcon className={'swiper-top-prev'} />
-								<div className={'swiper-top-pagination'}></div>
-								<EastIcon className={'swiper-top-next'} />
-							</div>
-						</Box>
-					</Stack>
-					<Stack className={'card-box'}>
-						<Swiper
-							className={'top-property-swiper'}
-							slidesPerView={'auto'}
-							spaceBetween={15}
-							modules={[Autoplay, Navigation, Pagination]}
-							navigation={{
-								nextEl: '.swiper-top-next',
-								prevEl: '.swiper-top-prev',
-							}}
-							pagination={{
-								el: '.swiper-top-pagination',
-							}}
-						>
-							{topProperties.map((property: Property) => {
-								return (
-									<SwiperSlide className={'top-property-slide'} key={property?._id}>
-										<TopPropertyCard
-											property={property}
-											likePropertyHandler={likePropertyHandler}
-										/>
-									</SwiperSlide>
-								);
-							})}
+							{topProperties.map((property: Property) => (
+								<SwiperSlide className={'top-property-slide'} key={property?._id}>
+									<TopPropertyCard property={property} likePropertyHandler={likePropertyHandler} />
+								</SwiperSlide>
+							))}
 						</Swiper>
 					</Stack>
 				</Stack>
 			</Stack>
 		);
 	}
+
+	return (
+		<Stack className={'top-properties'}>
+			<Stack className={'container'}>
+				<Stack className={'info-box'}>
+					<Box component={'div'} className={'left'}>
+						<span>Top Cars</span>
+						<p>Ranked by score</p>
+					</Box>
+					<Box component={'div'} className={'right'}>
+						<div className={'pagination-box'}>
+							<WestIcon className={'swiper-top-prev'} />
+							<div className={'swiper-top-pagination'}></div>
+							<EastIcon className={'swiper-top-next'} />
+						</div>
+					</Box>
+				</Stack>
+
+				<Stack className={'card-box'}>
+					<Swiper
+						className={'top-property-swiper'}
+						slidesPerView={'auto'}
+						spaceBetween={16}
+						modules={[Autoplay, Navigation, Pagination]}
+						navigation={{ nextEl: '.swiper-top-next', prevEl: '.swiper-top-prev' }}
+						pagination={{ el: '.swiper-top-pagination' }}
+					>
+						{topProperties.map((property: Property) => (
+							<SwiperSlide className={'top-property-slide'} key={property?._id}>
+								<TopPropertyCard property={property} likePropertyHandler={likePropertyHandler} />
+							</SwiperSlide>
+						))}
+					</Swiper>
+				</Stack>
+			</Stack>
+		</Stack>
+	);
 };
 
 TopProperties.defaultProps = {

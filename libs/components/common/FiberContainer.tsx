@@ -1,63 +1,68 @@
-import React, { useRef } from 'react';
-import { Canvas, useThree } from '@react-three/fiber';
-import { Suspense } from 'react';
-import { Preload, Image as ImageImpl } from '@react-three/drei';
-import { ScrollControls, Scroll } from './ScrollControls';
-import * as THREE from 'three';
+import React from 'react';
+import useDeviceDetect from '../../hooks/useDeviceDetect';
+import { Stack } from '@mui/material';
 
-function Image(props: any) {
-	const ref = useRef<THREE.Group>();
-	const group = useRef<THREE.Group>();
+const HeroVideo  = () => {
+	const device = useDeviceDetect();
 
 	return (
-		// @ts-ignore
-		<group ref={group}>
-			<ImageImpl ref={ref} {...props} />
-		</group>
+		<Stack
+			className={'video-frame'}
+			sx={{
+				position: 'relative',
+				width: '100%',
+				height: '520px',
+				overflow: 'hidden',
+				background: '#0B0F1A',
+			}}
+		>
+			{/* VIDEO */}
+			<video
+				autoPlay
+				muted
+				loop
+				playsInline
+				preload="auto"
+				style={{
+					position: 'absolute',
+					inset: 0,
+					width: '100%',
+					height: '100%',
+					objectFit: 'cover',
+				}}
+			>
+				<source src="/video/car.webm" type="video/webm" />
+				<source src="/video/car.mp4" type="video/mp4" />
+			</video>
+
+			{/* DARK OVERLAY */}
+			<div
+				style={{
+					position: 'absolute',
+					inset: 0,
+					background:
+						'linear-gradient(90deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0) 100%)',
+				}}
+			/>
+
+			{/* TEXT (optional) */}
+			<div
+				style={{
+					position: 'absolute',
+					left: '6%',
+					top: '50%',
+					transform: 'translateY(-50%)',
+					color: 'white',
+					zIndex: 2,
+				}}
+			>
+				<div style={{ fontSize: 44, fontWeight: 800 }}>MyCar</div>
+				<div style={{ marginTop: 10, fontSize: 18 }}>
+					Mashina topish — tez va ishonchli
+				</div>
+			</div>
+		</Stack>
 	);
-}
+};
 
-function Page({ m = 0.4, urls, ...props }: any) {
-	const { width } = useThree((state) => state.viewport);
-	const w = width < 10 ? 1.5 / 3 : 1 / 3;
-
-	return (
-		<group {...props}>
-			<Image position={[-width * w, 0, -1]} scale={[width * w - m * 2, 5, 1]} url={urls[0]} />
-			<Image position={[0, 0, 0]} scale={[width * w - m * 2, 5, 1]} url={urls[1]} />
-			<Image position={[width * w, 0, 1]} scale={[width * w - m * 2, 5, 1]} url={urls[2]} />
-		</group>
-	);
-}
-
-function Pages() {
-	const { width } = useThree((state) => state.viewport);
-
-	return (
-		<>
-			<Page position={[width * 0, 0, 0]} urls={['/img/fiber/img7.jpg', '/img/fiber/img8.jpg', '/img/fiber/img1.jpg']} />
-			<Page position={[width * 1, 0, 0]} urls={['/img/fiber/img4.jpg', '/img/fiber/img5.jpg', '/img/fiber/img6.jpg']} />
-			<Page position={[width * 2, 0, 0]} urls={['/img/fiber/img2.jpg', '/img/fiber/img3.jpg', '/img/fiber/img4.jpg']} />
-			<Page position={[width * 3, 0, 0]} urls={['/img/fiber/img7.jpg', '/img/fiber/img8.jpg', '/img/fiber/img1.jpg']} />
-			<Page position={[width * 4, 0, 0]} urls={['/img/fiber/img4.jpg', '/img/fiber/img5.jpg', '/img/fiber/img6.jpg']} />
-		</>
-	);
-}
-
-export default function FiberContainer() {
-	return (
-		<div className="threeJSContainer" style={{ marginTop: '100px', width: '100%', height: '512px' }}>
-			<Canvas gl={{ antialias: false }} dpr={[1, 1.5]}>
-				<Suspense fallback={null}>
-					<ScrollControls infinite horizontal damping={4} pages={4} distance={1}>
-						<Scroll>
-							<Pages />
-						</Scroll>
-					</ScrollControls>
-					<Preload />
-				</Suspense>
-			</Canvas>
-		</div>
-
-	);
-}
+export default HeroVideo;

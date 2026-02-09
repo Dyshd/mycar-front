@@ -12,6 +12,7 @@ export interface TotalCounter {
 }
 
 export interface Property {
+  propertyBuildYear: string;
 	_id: string;
 	propertyType: PropertyType;
 	propertyStatus: PropertyStatus;
