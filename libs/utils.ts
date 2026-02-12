@@ -43,3 +43,9 @@ export const likeTargetMemberHandler = async (likeTargetMember: any, id: string)
 		sweetMixinErrorAlert(err.message).then();
 	}
 };
+export const carLabels = {
+	beds: 'Seats',
+	rooms: 'Gear',
+	square: 'Mileage',
+};
+

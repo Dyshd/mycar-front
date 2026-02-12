@@ -1,343 +1,381 @@
 #pc-wrap {
-	.agent-detail-page {
+	// =========================
+	// DEALER DETAIL PAGE
+	// =========================
+	.dealer-detail-page {
 		position: relative;
-		padding: 133px 0 75px;
+		padding: 130px 0 80px;
 		width: 100%;
-		height: auto;
 		display: flex;
-		flex-direction: row;
 		justify-content: center;
+
 		.container {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-			.agent-info {
-				margin-left: 58px;
+			width: 100%;
+
+			.dealer-hero {
 				width: 100%;
+				border-radius: 22px;
+				padding: 18px 18px;
 				display: flex;
 				flex-direction: row;
 				align-items: center;
-				img {
-					margin-right: 32px;
-					width: 135px;
-					height: 135px;
-					border-radius: 50%;
-					cursor: pointer;
-					object-fit: cover;
+				gap: 18px;
+				background: linear-gradient(180deg, rgba(17, 19, 24, 0.04), rgba(17, 19, 24, 0.01));
+				border: 1px solid rgba(17, 19, 24, 0.08);
+				box-shadow: 0 14px 35px rgba(17, 19, 24, 0.08);
+
+				.avatar {
+					width: 120px;
+					height: 120px;
+					border-radius: 22px;
+					overflow: hidden;
+					border: 1px solid rgba(17, 19, 24, 0.10);
+					background: #fff;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+
+					img {
+						width: 100%;
+						height: 100%;
+						object-fit: cover;
+					}
 				}
+
 				.info {
 					display: flex;
 					flex-direction: column;
+					gap: 10px;
+					cursor: pointer;
+
 					strong {
-						color: #181a20;
+						color: #111318;
 						font-family: $font;
-						font-size: 24px;
-						font-style: normal;
-						font-weight: 600;
-						line-height: normal;
-						text-transform: capitalize;
-						cursor: pointer;
+						font-size: 26px;
+						font-weight: 800;
+						letter-spacing: -0.2px;
 					}
-					div {
-						margin-top: 13px;
+
+					.chips {
+						display: flex;
+						gap: 8px;
+						flex-wrap: wrap;
+
+						.chip {
+							padding: 6px 10px;
+							border-radius: 999px;
+							font-family: $font;
+							font-size: 12px;
+							font-weight: 700;
+							color: #111318;
+							background: rgba(17, 19, 24, 0.06);
+							border: 1px solid rgba(17, 19, 24, 0.10);
+
+							&.soft {
+								background: rgba(235, 103, 83, 0.10);
+								border-color: rgba(235, 103, 83, 0.25);
+								color: #eb6753;
+							}
+						}
+					}
+
+					.phone {
 						display: flex;
 						flex-direction: row;
 						align-items: center;
+						gap: 10px;
+
 						img {
-							margin-right: 10px;
-							width: 16px;
-							height: 16px;
+							width: 18px;
+							height: 18px;
 						}
+
 						span {
-							color: #181a20;
+							color: #111318;
 							font-family: $font;
-							font-size: 20px;
-							font-style: normal;
-							font-weight: 400;
-							line-height: 28px;
+							font-size: 16px;
+							font-weight: 600;
 						}
 					}
 				}
 			}
-			.agent-home-list {
+
+			.dealer-cars {
 				position: relative;
 				width: 100%;
-				margin-top: 33px;
-				padding: 0px 0 46px;
+				margin-top: 22px;
+				padding: 18px 16px 22px;
 				display: flex;
 				flex-direction: column;
-				border-radius: 12px;
+				border-radius: 18px;
 				background: #fff;
-				box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
-				.card-wrap {
-					position: relative;
-					margin-top: 35px;
-					width: 100%;
-					height: auto;
+				border: 1px solid rgba(17, 19, 24, 0.08);
+				box-shadow: 0 12px 34px rgba(17, 19, 24, 0.06);
+
+				.section-head {
 					display: flex;
-					flex-direction: row;
-					flex-wrap: wrap;
-					.wrap-main {
-						margin-right: 0px;
-						margin-left: 5px;
-						display: flex;
-						flex-direction: row;
-						flex-wrap: wrap;
+					justify-content: space-between;
+					align-items: baseline;
+					padding: 6px 6px 14px;
+
+					strong {
+						color: #111318;
+						font-family: $font;
+						font-size: 18px;
+						font-weight: 800;
 					}
-					.agent-card {
-						position: relative;
-						margin-right: 27px;
-						margin-bottom: 34px;
-						display: flex;
-						flex-direction: column;
-						.agent-img {
-							border-radius: 12px;
-							width: 233px;
-							height: 273px;
-							background-size: cover;
-							cursor: pointer;
-							div {
-								position: absolute;
-								padding: 12px;
-								top: 12px;
-								left: 12px;
-								border-radius: 6px;
-								background: #eb6753;
-								color: #fff;
-								font-family: $font;
-								font-size: 12px;
-								font-style: normal;
-								font-weight: 600;
-								line-height: normal;
-							}
-						}
-						.agent-info {
-							margin-top: 23px;
-							display: flex;
-							flex-direction: column;
-							strong {
-								color: #181a20;
-								font-family: $font;
-								font-size: 15px;
-								font-style: normal;
-								font-weight: 600;
-								line-height: normal;
-								cursor: pointer;
-							}
-							span {
-								color: #181a20;
-								font-family: $font;
-								font-size: 15px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: 28px;
-							}
-						}
+
+					span {
+						color: #6b7280;
+						font-family: $font;
+						font-size: 13px;
+						font-weight: 700;
 					}
 				}
+
+				.card-wrap {
+					display: flex;
+					flex-wrap: wrap;
+					gap: 14px;
+				}
+
 				.pagination {
 					display: flex;
 					flex-direction: column;
 					align-items: center;
+					margin-top: 18px;
+
 					span {
-						margin-top: 20px;
-						color: #181a20;
+						margin-top: 12px;
+						color: #6b7280;
 						font-family: $font;
-						font-size: 14px;
-						font-style: normal;
-						font-weight: 400;
-						line-height: 26px;
+						font-size: 13px;
+						font-weight: 600;
+					}
+
+					.no-data {
+						width: 100%;
+						min-height: 220px;
+						border-radius: 16px;
+						border: 1px dashed rgba(17, 19, 24, 0.20);
+						display: flex;
+						flex-direction: column;
+						justify-content: center;
+						align-items: center;
+						gap: 10px;
+						background: rgba(17, 19, 24, 0.02);
+
+						p {
+							color: #111318;
+							font-family: $font;
+							font-size: 14px;
+							font-weight: 700;
+						}
 					}
 				}
 			}
+
 			.review-box {
-				position: relative;
-				margin-top: 75px;
-				padding: 58px 19px;
-				width: 95%;
-				height: auto;
-				border-radius: 24px;
-				background: #f6f6f6;
+				width: 100%;
+				margin-top: 28px;
+				padding: 26px 18px;
+				border-radius: 22px;
+				background: rgba(17, 19, 24, 0.02);
+				border: 1px solid rgba(17, 19, 24, 0.08);
+
 				.main-intro {
 					display: flex;
 					flex-direction: column;
+					gap: 6px;
+
 					span {
-						color: #181a20;
+						color: #111318;
 						font-family: $font;
-						font-size: 30px;
-						font-style: normal;
-						font-weight: 600;
-						line-height: normal;
-						letter-spacing: 0.6px;
-						text-transform: capitalize;
+						font-size: 22px;
+						font-weight: 800;
 					}
+
 					p {
-						color: #181a20;
+						color: #6b7280;
 						font-family: $font;
-						font-size: 14px;
-						font-style: normal;
-						font-weight: 400;
-						line-height: 26px;
+						font-size: 13px;
+						font-weight: 600;
 					}
 				}
+
 				.review-wrap {
-					padding: 29px 25px;
-					margin-top: 57px;
-					display: flex;
-					flex-direction: column;
-					border-radius: 12px;
+					margin-top: 18px;
+					padding: 18px 16px;
+					border-radius: 16px;
 					background: #fff;
-					box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
+					border: 1px solid rgba(17, 19, 24, 0.08);
+					box-shadow: 0 10px 28px rgba(17, 19, 24, 0.06);
+
 					.title-box {
+						display: flex;
+						align-items: center;
+
 						svg {
-							width: 10px;
-							height: 10px;
+							width: 16px;
+							height: 16px;
 						}
+
 						span {
 							margin-left: 8px;
-							color: #181a20;
-							font-family: $font;
-							font-size: 17px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-						}
-					}
-					.review-card {
-						margin-top: 20px;
-						display: flex;
-						flex-direction: column;
-						padding-bottom: 10px;
-						border-bottom: 1px solid #c4c4c4;
-						.info {
-							display: flex;
-							flex-direction: row;
-							justify-content: space-between;
-							.left {
-								display: flex;
-								flex-direction: row;
-								img {
-									width: 55px;
-									height: 59px;
-									border-radius: 50%;
-									object-fit: cover;
-								}
-								div {
-									margin-left: 8px;
-									display: flex;
-									flex-direction: column;
-									strong {
-										color: #181a20;
-										font-family: $font;
-										font-size: 15px;
-										font-style: normal;
-										font-weight: 600;
-										line-height: normal;
-									}
-									span {
-										margin-top: 4px;
-										color: #181a20;
-										font-family: $font;
-										font-size: 13px;
-										font-style: normal;
-										font-weight: 400;
-										line-height: normal;
-									}
-								}
-							}
-							.right {
-								display: flex;
-								flex-direction: row;
-								svg {
-									color: #edf023;
-								}
-							}
-						}
-						p {
-							margin-top: 10px;
-							color: #181a20;
+							color: #111318;
 							font-family: $font;
 							font-size: 14px;
-							font-style: normal;
-							font-weight: 400;
-							line-height: 26px;
+							font-weight: 800;
 						}
 					}
+
 					.pagination-box {
-						margin-top: 15px;
+						margin-top: 14px;
 						width: 100%;
-						height: auto;
 						display: flex;
 						justify-content: center;
 					}
 				}
+
 				.leave-review-config {
-					margin-top: 15px;
-					border-radius: 12px;
+					margin-top: 14px;
+					border-radius: 16px;
 					background: #fff;
-					box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
-					padding: 30px 38px;
+					border: 1px solid rgba(17, 19, 24, 0.08);
+					box-shadow: 0 10px 28px rgba(17, 19, 24, 0.06);
+					padding: 18px 16px;
+
 					.main-title {
-						color: #181a20;
+						color: #111318;
 						font-family: $font;
-						font-size: 17px;
-						font-style: normal;
-						font-weight: 600;
-						line-height: normal;
+						font-size: 16px;
+						font-weight: 800;
 					}
+
 					.review-title {
-						margin-top: 20px;
-						color: #181a20;
+						margin-top: 12px;
+						color: #6b7280;
 						font-family: $font;
-						font-size: 14px;
-						font-style: normal;
-						font-weight: 600;
-						line-height: normal;
+						font-size: 13px;
+						font-weight: 700;
 					}
+
 					textarea {
 						width: 100%;
 						height: 120px;
 						margin-top: 8px;
-						padding: 20px;
-						border-radius: 8px;
-						border: 1px solid #ddd;
-						color: #717171;
+						padding: 14px 14px;
+						border-radius: 14px;
+						border: 1px solid rgba(17, 19, 24, 0.12);
+						color: #111318;
 						font-family: $font;
 						font-size: 14px;
-						font-style: normal;
-						font-weight: 400;
-						line-height: 26px;
+						font-weight: 500;
+						outline: none;
+
+						&::placeholder {
+							color: #9ca3af;
+						}
+
+						&:focus {
+							border-color: rgba(17, 19, 24, 0.35);
+							box-shadow: 0 10px 28px rgba(17, 19, 24, 0.08);
+						}
 					}
+
 					.submit-btn {
 						width: 100%;
 						display: flex;
 						justify-content: flex-end;
-						button:disabled {
-							background: #dfdfdf;
-						}
+
 						.submit-review {
-							display: flex;
-							width: 256px;
-							margin-top: 30px;
-							padding: 16px 30px;
-							justify-content: center;
-							align-items: center;
-							gap: 10px;
-							border-radius: 12px;
-							border: 1px solid #c4c4c4;
+							margin-top: 14px;
+							border-radius: 14px;
+							padding: 12px 16px;
+							border: 1px solid rgba(17, 19, 24, 0.12);
+							background: #111318;
 							cursor: pointer;
+
 							.title {
-								color: #181a20;
+								color: #fff;
 								font-family: $font;
-								font-size: 15px;
-								font-style: normal;
-								font-weight: 600;
-								line-height: normal;
+								font-size: 13px;
+								font-weight: 800;
+							}
+						}
+
+						button:disabled {
+							background: #e5e7eb;
+							.title {
+								color: #6b7280;
 							}
 						}
 					}
 				}
 			}
+		}
+	}
+
+	// =========================
+	// REVIEW CARD (Dealer)
+	// =========================
+	.dealer-review-card {
+		margin-top: 14px;
+		padding: 14px 14px;
+		border-radius: 16px;
+		border: 1px solid rgba(17, 19, 24, 0.08);
+		background: rgba(17, 19, 24, 0.01);
+
+		.header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+
+			.left {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+
+				img {
+					width: 44px;
+					height: 44px;
+					border-radius: 12px;
+					object-fit: cover;
+					border: 1px solid rgba(17, 19, 24, 0.08);
+				}
+
+				.meta {
+					display: flex;
+					flex-direction: column;
+					gap: 2px;
+
+					strong {
+						color: #111318;
+						font-family: $font;
+						font-size: 14px;
+						font-weight: 800;
+					}
+
+					span {
+						color: #6b7280;
+						font-family: $font;
+						font-size: 12px;
+						font-weight: 700;
+					}
+				}
+			}
+		}
+
+		.text {
+			margin-top: 10px;
+			color: #111318;
+			font-family: $font;
+			font-size: 14px;
+			font-weight: 500;
+			line-height: 24px;
 		}
 	}
 }

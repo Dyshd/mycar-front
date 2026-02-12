@@ -1,80 +1,152 @@
-#pc-wrap {
-	.agent-list-page {
-		position: relative;
-		padding: 147px 0 75px;
+.dealer-list-page {
+	position: relative;
+	padding: 140px 0 80px;
+	width: 100%;
+	height: auto;
+	display: flex;
+	justify-content: center;
+
+	.container {
 		width: 100%;
-		height: auto;
 		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		.container {
+		flex-direction: column;
+
+		.topbar {
 			display: flex;
 			flex-direction: column;
+			gap: 18px;
+
+			.title-box {
+				display: flex;
+				flex-direction: column;
+				gap: 6px;
+
+				strong {
+					color: #111318;
+					font-family: $font;
+					font-size: 32px;
+					font-weight: 700;
+					letter-spacing: -0.3px;
+				}
+
+				span {
+					color: #6b7280;
+					font-family: $font;
+					font-size: 14px;
+					font-weight: 500;
+				}
+			}
+
 			.filter {
 				display: flex;
 				flex-direction: row;
 				justify-content: space-between;
 				align-items: center;
+				gap: 14px;
+
 				.left {
 					display: flex;
 					flex-direction: row;
+					width: 100%;
+
 					input {
-						padding: 22px 10px;
-						width: 333px;
+						padding: 0 18px;
+						width: 360px;
+						max-width: 100%;
 						height: 50px;
-						border-radius: 40px;
-						border: 1px solid #ddd;
+						border-radius: 14px;
+						border: 1px solid rgba(17, 19, 24, 0.12);
 						background: #fff;
-						color: #181a20;
+						color: #111318;
 						font-family: $font;
 						font-size: 14px;
-						font-style: normal;
-						font-weight: 400;
-						line-height: 26px;
+						font-weight: 500;
 						box-sizing: border-box;
+						outline: none;
+						transition: 0.2s;
+
+						&:focus {
+							border-color: rgba(17, 19, 24, 0.35);
+							box-shadow: 0 10px 28px rgba(17, 19, 24, 0.08);
+						}
 					}
 				}
+
 				.right {
 					display: flex;
 					flex-direction: row;
 					align-items: center;
-					button {
-						margin-left: 10px;
-						color: #181a20;
+					gap: 10px;
+
+					span {
+						color: #6b7280;
 						font-family: $font;
-						font-size: 14px;
-						font-style: normal;
-						font-weight: bold;
-						line-height: 26px;
+						font-size: 13px;
+						font-weight: 600;
+					}
+
+					button {
+						height: 44px;
+						border-radius: 14px;
+						padding: 0 14px;
+						color: #111318;
+						font-family: $font;
+						font-size: 13px;
+						font-weight: 700;
+						background: rgba(17, 19, 24, 0.04);
+						border: 1px solid rgba(17, 19, 24, 0.1);
+
 						&:hover {
-							background: none;
+							background: rgba(17, 19, 24, 0.06);
 						}
 					}
 				}
 			}
-			.card-wrap {
-				position: relative;
-				margin-top: 35px;
+		}
+
+		.card-wrap {
+			position: relative;
+			margin-top: 28px;
+			width: 100%;
+			min-height: 420px;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			gap: 18px;
+
+			.no-data {
 				width: 100%;
-				min-height: 500px;
-				height: auto;
-				display: flex;
-				flex-direction: row;
-				flex-wrap: wrap;
-			}
-			.pagination {
+				min-height: 280px;
+				border-radius: 18px;
+				border: 1px dashed rgba(17, 19, 24, 0.2);
 				display: flex;
 				flex-direction: column;
+				justify-content: center;
 				align-items: center;
-				span {
-					margin-top: 20px;
-					color: #181a20;
+				gap: 10px;
+				background: rgba(17, 19, 24, 0.02);
+
+				p {
+					color: #111318;
 					font-family: $font;
 					font-size: 14px;
-					font-style: normal;
-					font-weight: 400;
-					line-height: 26px; /* 185.714% */
+					font-weight: 600;
 				}
+			}
+		}
+
+		.pagination {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			margin-top: 26px;
+
+			span {
+				margin-top: 14px;
+				color: #6b7280;
+				font-family: $font;
+				font-size: 13px;
+				font-weight: 600;
 			}
 		}
 	}
