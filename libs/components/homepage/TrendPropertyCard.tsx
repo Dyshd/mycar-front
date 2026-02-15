@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Stack, Box, Divider } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
@@ -8,6 +8,7 @@ import { REACT_APP_API_URL } from "../../config";
 import { useRouter } from "next/router";
 import { useReactiveVar } from "@apollo/client";
 import { userVar } from "../../../apollo/store";
+import { getRentUnit, formatterStr } from "../../utils";
 
 interface TrendPropertyCardProps {
   property: Property;
@@ -23,9 +24,12 @@ const TrendPropertyCard = ({ property, likePropertyHandler }: TrendPropertyCardP
     await router.push({ pathname: "/property/detail", query: { id: propertyId } });
   };
 
-  const imgUrl = property?.propertyImages?.[0]
-    ? `${REACT_APP_API_URL.replace(/\/$/, "")}/${String(property.propertyImages[0]).replace(/^\//, "")}`
-    : "/img/property/default.jpg";
+  const imgUrl = useMemo(() => {
+    const first = property?.propertyImages?.[0];
+    return first
+      ? `${REACT_APP_API_URL.replace(/\/$/, "")}/${String(first).replace(/^\//, "")}`
+      : "/img/property/default.jpg";
+  }, [property?.propertyImages]);
 
   // backend o‘zgarmasin, faqat label-car bo‘lsin
   const seats = property?.propertyBeds ?? 0;
@@ -36,7 +40,7 @@ const TrendPropertyCard = ({ property, likePropertyHandler }: TrendPropertyCardP
   const likes = property?.propertyLikes ?? 0;
 
   // “rating”ni random qilmaymiz: likes/viewdan “score”
-  const score = Math.min(5, Math.max(4.2, 4.2 + (likes / 100))); // 4.2..5.0 oralig‘ida
+  const score = Math.min(5, Math.max(4.2, 4.2 + likes / 100)); // 4.2..5.0
   const trips = Math.max(1, Math.floor(views / 10));
 
   // “HOT” — likes katta bo‘lsa
@@ -47,10 +51,24 @@ const TrendPropertyCard = ({ property, likePropertyHandler }: TrendPropertyCardP
 
   const dealText = property?.propertyRent ? "Rent" : "Sale";
 
+  // ✅ unit: /day /month /year (rent bo‘lsa)
+  const unit = useMemo(() => {
+    if (!property?.propertyRent) return "";
+    // GraphQL schema'da: DAILY | MONTHLY | YEARLY
+    const u = getRentUnit((property as any)?.propertyRentPeriod);
+    return u || "/month"; // default xohlasangiz '' qiling
+  }, [property?.propertyRent, (property as any)?.propertyRentPeriod]);
+
+  const isLiked = !!property?.meLiked?.[0]?.myFavorite;
+
   return (
     <Stack className={`trendx-card ${device === "mobile" ? "is-mobile" : ""}`}>
       {/* IMAGE */}
-      <Box className="trendx-media" onClick={() => pushDetailHandler(property._id)} style={{ backgroundImage: `url(${imgUrl})` }}>
+      <Box
+        className="trendx-media"
+        onClick={() => pushDetailHandler(property._id)}
+        style={{ backgroundImage: `url(${imgUrl})` }}
+      >
         <div className="trendx-mediaOverlay" />
 
         {/* top-left badges */}
@@ -69,11 +87,7 @@ const TrendPropertyCard = ({ property, likePropertyHandler }: TrendPropertyCardP
           role="button"
           tabIndex={0}
         >
-          {property?.meLiked && property?.meLiked[0]?.myFavorite ? (
-            <FavoriteIcon className="liked" />
-          ) : (
-            <FavoriteIcon />
-          )}
+          {isLiked ? <FavoriteIcon className="liked" /> : <FavoriteIcon />}
         </div>
 
         {/* bottom floating spec bar */}
@@ -104,8 +118,8 @@ const TrendPropertyCard = ({ property, likePropertyHandler }: TrendPropertyCardP
           {property?.propertyDesc
             ? property.propertyDesc
             : property?.propertyAddress
-            ? property.propertyAddress
-            : "Fast & reliable"}
+              ? property.propertyAddress
+              : "Fast & reliable"}
         </p>
 
         <Divider sx={{ mt: "12px", mb: "12px", opacity: 0.25 }} />
@@ -113,9 +127,10 @@ const TrendPropertyCard = ({ property, likePropertyHandler }: TrendPropertyCardP
         <div className="trendx-bottom">
           <div className="trendx-chip">{dealText}</div>
 
+          {/* ✅ PRICE (unit hardcode emas) */}
           <div className="trendx-price">
-            <span className="amount">${property?.propertyPrice ?? 0}</span>
-            <span className="per"> / day</span>
+            <span className="amount">${formatterStr(property?.propertyPrice ?? 0)}</span>
+            {property?.propertyRent && unit ? <span className="per"> {unit}</span> : null}
           </div>
 
           <div className="trendx-meta">

@@ -141,6 +141,7 @@ export const CREATE_PROPERTY = gql`
 			propertyDesc
 			propertyBarter
 			propertyRent
+			propertyRentPeriod   
 			memberId
 			soldAt
 			deletedAt
@@ -170,6 +171,7 @@ export const UPDATE_PROPERTY = gql`
 			propertyDesc
 			propertyBarter
 			propertyRent
+			propertyRentPeriod   
 			memberId
 			soldAt
 			deletedAt

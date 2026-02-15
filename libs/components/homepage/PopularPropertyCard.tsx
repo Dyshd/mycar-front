@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Stack, Box, Divider, Typography } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Property } from '../../types/property/property';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { REACT_APP_API_URL, topPropertyRank } from '../../config';
 import { useRouter } from 'next/router';
+import { formatterStr, getRentUnit } from '../../utils';
 
 interface PopularPropertyCardProps {
   property: Property;
@@ -21,9 +21,10 @@ const PopularPropertyCard = (props: PopularPropertyCardProps) => {
     await router.push({ pathname: '/property/detail', query: { id: propertyId } });
   };
 
-  const imgUrl = property?.propertyImages?.[0]
-    ? `${REACT_APP_API_URL}${property.propertyImages[0]}`
-    : '/img/property/default.jpg';
+  const imgUrl = useMemo(() => {
+    const first = property?.propertyImages?.[0];
+    return first ? `${REACT_APP_API_URL}${first}` : '/img/property/default.jpg';
+  }, [property?.propertyImages]);
 
   // backend o‘zgarmasin — faqat UI label-car
   const seats = property?.propertyBeds ?? 0;
@@ -36,12 +37,19 @@ const PopularPropertyCard = (props: PopularPropertyCardProps) => {
   // Popular = views asosida
   const isPopular = views >= 50;
 
-  // “rating”ni uydirmaymiz — views/likesdan hisoblaymiz (4.3..5.0)
-  const score = Math.min(5, Math.max(4.3, 4.3 + (views / 250)));
+  // “rating” — views asosida (4.3..5.0)
+  const score = Math.min(5, Math.max(4.3, 4.3 + views / 250));
   const trips = Math.max(1, Math.floor(views / 8));
 
-  // “Save” chip — views katta bo‘lsa
+  // “Save” — views katta bo‘lsa
   const save = views >= 60 ? Math.min(90, Math.floor(views / 2)) : 0;
+
+  // ✅ unit
+  const unit = useMemo(() => {
+    if (!property?.propertyRent) return '';
+    const u = getRentUnit((property as any)?.propertyRentPeriod);
+    return u || '/month';
+  }, [property?.propertyRent, (property as any)?.propertyRentPeriod]);
 
   return (
     <Stack className={`popx-card ${device === 'mobile' ? 'is-mobile' : ''}`}>
@@ -52,7 +60,6 @@ const PopularPropertyCard = (props: PopularPropertyCardProps) => {
         style={{ backgroundImage: `url(${imgUrl})` }}
         onClick={() => pushDetailHandler(property._id)}
       >
-        {/* soft top badge */}
         <div className="popx-topRow">
           {property?.propertyRank && property?.propertyRank >= topPropertyRank ? (
             <div className="popx-pill popx-pill-top">TOP</div>
@@ -62,17 +69,16 @@ const PopularPropertyCard = (props: PopularPropertyCardProps) => {
             <div className="popx-pill popx-pill-new">NEW</div>
           )}
 
-          {/* views badge */}
           <div className="popx-views">
             <RemoveRedEyeIcon className="eye" />
             <span>{views}</span>
           </div>
         </div>
 
-        {/* bottom price strip */}
+        {/* ✅ bottom price strip (unit hardcode emas) */}
         <div className="popx-priceStrip">
-          <span className="amount">${property?.propertyPrice ?? 0}</span>
-          <span className="per"> / day</span>
+          <span className="amount">${formatterStr(property?.propertyPrice ?? 0)}</span>
+          {property?.propertyRent && unit ? <span className="per"> {unit}</span> : null}
         </div>
       </Box>
 
@@ -94,7 +100,6 @@ const PopularPropertyCard = (props: PopularPropertyCardProps) => {
           {property?.propertyAddress ? property.propertyAddress : 'Comfortable & clean'}
         </p>
 
-        {/* chips */}
         <div className="popx-chips">
           <div className="chip">{seats} seats</div>
           <div className="chip">{doors} doors</div>
@@ -103,7 +108,6 @@ const PopularPropertyCard = (props: PopularPropertyCardProps) => {
 
         <Divider sx={{ mt: '12px', mb: '12px', opacity: 0.2 }} />
 
-        {/* bottom row */}
         <div className="popx-bottom">
           <div className="popx-left">
             {save ? <div className="save">Save ${save}</div> : <div className="save muted">Good deal</div>}

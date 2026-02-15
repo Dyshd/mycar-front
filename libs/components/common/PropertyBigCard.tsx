@@ -6,7 +6,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { Property } from '../../types/property/property';
 import { REACT_APP_API_URL, topPropertyRank } from '../../config';
-import { formatterStr } from '../../utils';
+import { formatterStr, getRentUnit } from '../../utils';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { useRouter } from 'next/router';
@@ -35,6 +35,13 @@ const PropertyBigCard = (props: PropertyBigCardProps) => {
 
   if (device === 'mobile') return <div>APARTMEND BIG CARD</div>;
 
+  // ✅ unit (util orqali)
+  const unit = useMemo(() => {
+    if (!property?.propertyRent) return '';
+    const u = getRentUnit((property as any)?.propertyRentPeriod);
+    return u || '/month'; // xohlasangiz '' qiling
+  }, [property?.propertyRent, (property as any)?.propertyRentPeriod]);
+
   return (
     <Stack className="property-big-card-box" onClick={() => goPropertyDetatilPage(property?._id)}>
       <Box component={'div'} className={'card-img'} style={{ backgroundImage: bg }}>
@@ -45,7 +52,10 @@ const PropertyBigCard = (props: PropertyBigCardProps) => {
           </div>
         )}
 
-        <div className={'price'}>${formatterStr(property?.propertyPrice)}</div>
+        <div className="auto-price">
+          <b>${formatterStr(property?.propertyPrice)}</b>
+          {unit && <span className="unit">{unit}</span>}
+        </div>
       </Box>
 
       <Box component={'div'} className={'info'}>
@@ -84,7 +94,7 @@ const PropertyBigCard = (props: PropertyBigCardProps) => {
           <div className="buttons-box">
             <IconButton
               color={'default'}
-              onClick={(e: { stopPropagation: () => void; }) => {
+              onClick={(e: { stopPropagation: () => void }) => {
                 e.stopPropagation();
               }}
             >
@@ -94,7 +104,7 @@ const PropertyBigCard = (props: PropertyBigCardProps) => {
 
             <IconButton
               color={'default'}
-              onClick={(e: { stopPropagation: () => void; }) => {
+              onClick={(e: { stopPropagation: () => void }) => {
                 e.stopPropagation();
                 likePropertyHandler && likePropertyHandler(user, property?._id);
               }}

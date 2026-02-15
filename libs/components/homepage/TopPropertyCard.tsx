@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Stack, Box, Typography } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
@@ -10,6 +10,7 @@ import { REACT_APP_API_URL } from '../../config';
 import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
+import { formatterStr, getRentUnit } from '../../utils';
 
 interface TopPropertyCardProps {
 	property: Property;
@@ -26,9 +27,10 @@ const TopPropertyCard = (props: TopPropertyCardProps) => {
 		await router.push({ pathname: '/property/detail', query: { id: propertyId } });
 	};
 
-	const imgUrl = property?.propertyImages?.[0]
-		? `${REACT_APP_API_URL}${property.propertyImages[0]}`
-		: '/img/property/default.jpg';
+	const imgUrl = useMemo(() => {
+		const first = property?.propertyImages?.[0];
+		return first ? `${REACT_APP_API_URL}${first}` : '/img/property/default.jpg';
+	}, [property?.propertyImages]);
 
 	// backend o‘zgarmasin — faqat UI label-car
 	const seats = property?.propertyBeds ?? 0;
@@ -38,6 +40,15 @@ const TopPropertyCard = (props: TopPropertyCardProps) => {
 	const views = property?.propertyViews ?? 0;
 	const likes = property?.propertyLikes ?? 0;
 	const rank = property?.propertyRank ?? 0;
+
+	// ✅ unit: /day /month /year (rent bo‘lsa)
+	const unit = useMemo(() => {
+		if (!property?.propertyRent) return '';
+		const u = getRentUnit((property as any)?.propertyRentPeriod);
+		return u || '/month';
+	}, [property?.propertyRent, (property as any)?.propertyRentPeriod]);
+
+	const isLiked = !!property?.meLiked?.[0]?.myFavorite;
 
 	return (
 		<Stack className={`topx-card ${device === 'mobile' ? 'is-mobile' : ''}`}>
@@ -55,11 +66,11 @@ const TopPropertyCard = (props: TopPropertyCardProps) => {
 					<span>#{rank || 1}</span>
 				</div>
 
-				{/* price */}
+				{/* ✅ price (unit hardcode emas) */}
 				<div className="topx-price">
 					<span className="dollar">$</span>
-					<span className="val">{property?.propertyPrice ?? 0}</span>
-					<span className="per">/ day</span>
+					<span className="val">{formatterStr(property?.propertyPrice ?? 0)}</span>
+					{property?.propertyRent && unit ? <span className="per">{unit}</span> : null}
 				</div>
 
 				{/* quick stats glass bar */}
@@ -101,13 +112,12 @@ const TopPropertyCard = (props: TopPropertyCardProps) => {
 					<div className="topx-actions">
 						<IconButton
 							className="topx-likeBtn"
-							onClick={() => likePropertyHandler(user, property?._id)}
+							onClick={(e: { stopPropagation: () => void; }) => {
+								e.stopPropagation();
+								likePropertyHandler(user, property?._id);
+							}}
 						>
-							{property?.meLiked && property?.meLiked[0]?.myFavorite ? (
-								<FavoriteIcon className="liked" />
-							) : (
-								<FavoriteIcon />
-							)}
+							{isLiked ? <FavoriteIcon className="liked" /> : <FavoriteIcon />}
 						</IconButton>
 
 						<button className="topx-btn" type="button" onClick={() => pushDetailHandler(property._id)}>

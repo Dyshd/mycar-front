@@ -49,3 +49,18 @@ export const carLabels = {
 	square: 'Mileage',
 };
 
+// libs/utils/price.ts
+export const getRentUnit = (period?: string) => {
+	if (!period) return '';
+	const p = String(period).toUpperCase();
+
+	if (p === 'DAILY' || p === 'DAY') return '/day';
+	if (p === 'MONTHLY' || p === 'MONTH') return '/month';
+	if (p === 'YEARLY' || p === 'YEAR') return '/year';
+
+	return '';
+};
+
+
+
+

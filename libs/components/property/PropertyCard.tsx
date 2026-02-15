@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { Property } from '../../types/property/property';
-import { formatterStr } from '../../utils';
+import { formatterStr, getRentUnit } from '../../utils';
 import { REACT_APP_API_URL, topPropertyRank } from '../../config';
 
 interface PropertyCardType {
@@ -18,6 +18,7 @@ interface PropertyCardType {
 	recentlyVisited?: boolean;
 }
 
+/** Transmission label (siz xohlagancha qoldirdim) */
 const getTransmissionLabel = (rooms?: any) => {
 	const v = Number(rooms);
 	if (!Number.isFinite(v) || v <= 0) return 'N/A';
@@ -26,29 +27,33 @@ const getTransmissionLabel = (rooms?: any) => {
 	if (v === 3) return 'CVT';
 	return `${v} Gear`;
 };
+
 const getSeatsLabel = (beds?: any) => {
 	const v = Number(beds);
 	if (!Number.isFinite(v) || v <= 0) return 'N/A';
-	return `${v} Seats`;
+	return `${v}`;
 };
+
 const getMileageLabel = (square?: any) => {
 	const v = Number(square);
 	if (!Number.isFinite(v) || v <= 0) return 'N/A';
-	return `${v.toLocaleString()} km`;
+	return `${v.toLocaleString()}`;
 };
 
-// Unique inline icons (other projectga o‘xshamasin)
+// Inline icons
 const SeatIcon = () => (
 	<svg width="18" height="18" viewBox="0 0 24 24" fill="none">
 		<path d="M7 13V6a3 3 0 0 1 6 0v7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
 		<path d="M5 20v-4a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
 	</svg>
 );
+
 const GearIcon = () => (
 	<svg width="18" height="18" viewBox="0 0 24 24" fill="none">
 		<path d="M12 8v8M8 12h8M7 3h10M7 21h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
 	</svg>
 );
+
 const SpeedIcon = () => (
 	<svg width="18" height="18" viewBox="0 0 24 24" fill="none">
 		<path d="M21 14a9 9 0 1 0-18 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -68,10 +73,21 @@ const PropertyCard = (props: PropertyCardType) => {
 
 	if (device === 'mobile') return <div>PROPERTY CARD</div>;
 
-	const liked = myFavorites ? true : !!(property?.meLiked && property?.meLiked[0]?.myFavorite);
+	const liked = myFavorites ? true : !!property?.meLiked?.[0]?.myFavorite;
 
 	const dealTag = property?.propertyRent ? 'Lease' : 'Sale';
 	const tradeTag = property?.propertyBarter ? 'Trade OK' : 'No Trade';
+
+	/** ✅ Rent unit: /day, /month, /year
+	 *  Backenddan propertyRentPeriod kelmasa, unit bo‘sh bo‘ladi.
+	 */
+	const unit = useMemo(() => {
+		if (!property?.propertyRent) return '';
+		// propertyRentPeriod GraphQL schema ichida bo‘lishi shart:
+		// GET_PROPERTIES/GET_PROPERTY querylarda ham so‘ralgan bo‘lsin.
+		const period = (property as any)?.propertyRentPeriod;
+		return getRentUnit(period);
+	}, [property?.propertyRent, (property as any)?.propertyRentPeriod]);
 
 	return (
 		<Stack className="auto-card">
@@ -94,9 +110,10 @@ const PropertyCard = (props: PropertyCardType) => {
 						<div className={`chip chip-trade ${property?.propertyBarter ? 'on' : 'off'}`}>{tradeTag}</div>
 					</div>
 
+					{/* ✅ Price + unit */}
 					<div className="auto-price">
-						<span>$</span>
-						<b>{formatterStr(property?.propertyPrice)}</b>
+						<b>${formatterStr(property?.propertyPrice)}</b>
+						{unit && <span className="unit">{unit}</span>}
 					</div>
 				</div>
 
@@ -109,7 +126,7 @@ const PropertyCard = (props: PropertyCardType) => {
 					{!recentlyVisited && (
 						<IconButton
 							className={`fav ${liked ? 'liked' : ''}`}
-							onClick={(e: { preventDefault: () => void; stopPropagation: () => void; }) => {
+							onClick={(e: { preventDefault: () => void; stopPropagation: () => void }) => {
 								e.preventDefault();
 								e.stopPropagation();
 								likePropertyHandler && likePropertyHandler(user, property?._id);
@@ -137,6 +154,7 @@ const PropertyCard = (props: PropertyCardType) => {
 				</Typography>
 
 				<div className="auto-specs">
+					{/* Seats */}
 					<div className="spec">
 						<span className="ico">
 							<SeatIcon />
@@ -147,6 +165,7 @@ const PropertyCard = (props: PropertyCardType) => {
 						</div>
 					</div>
 
+					{/* Transmission */}
 					<div className="spec">
 						<span className="ico">
 							<GearIcon />
@@ -157,13 +176,14 @@ const PropertyCard = (props: PropertyCardType) => {
 						</div>
 					</div>
 
+					{/* Mileage */}
 					<div className="spec">
 						<span className="ico">
 							<SpeedIcon />
 						</span>
 						<div className="txt">
 							<b>{getMileageLabel(property?.propertySquare)}</b>
-							<small>Mileage</small>
+							<small>Mileage (km)</small>
 						</div>
 					</div>
 				</div>

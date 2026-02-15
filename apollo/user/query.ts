@@ -101,38 +101,18 @@ export const GET_PROPERTY = gql`
 			propertyDesc
 			propertyBarter
 			propertyRent
+
+			# ✅ QO‘SHING
+			propertyRentPeriod
+
 			memberId
 			soldAt
 			deletedAt
 			constructedAt
 			createdAt
 			updatedAt
-			memberData {
-				_id
-				memberType
-				memberStatus
-				memberAuthType
-				memberPhone
-				memberNick
-				memberFullName
-				memberImage
-				memberAddress
-				memberDesc
-				memberWarnings
-				memberBlocks
-				memberPoints
-				memberLikes
-				memberViews
-				deletedAt
-				createdAt
-				updatedAt
-				accessToken
-			}
-			meLiked {
-				memberId
-				likeRefId
-				myFavorite
-			}
+			memberData { _id memberType memberStatus memberAuthType memberPhone memberNick memberFullName memberImage memberAddress memberDesc memberWarnings memberBlocks memberPoints memberLikes memberViews deletedAt createdAt updatedAt accessToken }
+			meLiked { memberId likeRefId myFavorite }
 		}
 	}
 `;
@@ -159,6 +139,7 @@ export const GET_PROPERTIES = gql`
         propertyDesc
         propertyBarter
         propertyRent
+		propertyRentPeriod   
         memberId
         soldAt
         deletedAt

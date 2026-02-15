@@ -93,17 +93,19 @@
 					align-items: baseline;
 					gap: 6px;
 
-					span {
-						font-family: $font;
-						font-size: 12px;
-						font-weight: 900;
-						color: #181a20;
-					}
 					b {
 						font-family: $font;
 						font-size: 16px;
 						font-weight: 900;
 						color: #181a20;
+					}
+
+					.unit {
+						font-family: $font;
+						font-size: 11px;
+						font-weight: 800;
+						color: #6b7280;
+						margin-left: 2px;
 					}
 				}
 			}

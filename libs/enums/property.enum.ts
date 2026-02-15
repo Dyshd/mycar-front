@@ -28,3 +28,9 @@ export enum PropertyLocation {
 	JIZZAKH = 'JIZZAKH',
 	KARAKALPAKSTAN = 'KARAKALPAKSTAN',
 }
+
+export enum PropertyRentPeriod {
+	DAILY = 'DAILY',
+	MONTHLY = 'MONTHLY',
+	YEARLY = 'YEARLY',
+}
