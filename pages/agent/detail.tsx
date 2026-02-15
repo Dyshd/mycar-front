@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { NextPage } from 'next';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
@@ -6,6 +6,9 @@ import PropertyBigCard from '../../libs/components/common/PropertyBigCard';
 import ReviewCard from '../../libs/components/agent/ReviewCard';
 import { Box, Button, Pagination, Stack, Typography } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
+import VerifiedIcon from '@mui/icons-material/Verified';
+import PlaceIcon from '@mui/icons-material/Place';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { Property } from '../../libs/types/property/property';
@@ -21,6 +24,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { CREATE_COMMENT, LIKE_TARGET_PROPERTY } from '../../apollo/user/mutation';
 import { GET_COMMENTS, GET_MEMBER, GET_PROPERTIES } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
+
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
 		...(await serverSideTranslations(locale, ['common'])),
@@ -118,9 +122,17 @@ const AgentDetail: NextPage = ({ initialInput, initialComment }: any) => {
 		if (commentInquiry.search.commentRefId) getCommentsRefetch({ input: commentInquiry }).then();
 	}, [commentInquiry]);
 
+	/** UI helpers **/
+	const dealerImage = useMemo(() => {
+		return dealer?.memberImage ? `${REACT_APP_API_URL}/${dealer.memberImage}` : '/img/profile/defaultUser.svg';
+	}, [dealer?.memberImage]);
+
+	const dealerName = dealer?.memberFullName ?? dealer?.memberNick ?? 'Dealer';
+
 	/** HANDLERS **/
 	const redirectToMemberPageHandler = async (memberId: string) => {
 		try {
+			if (!memberId) return;
 			if (memberId === user?._id) await router.push(`/mypage?memberId=${memberId}`);
 			else await router.push(`/member?memberId=${memberId}`);
 		} catch (error) {
@@ -145,6 +157,7 @@ const AgentDetail: NextPage = ({ initialInput, initialComment }: any) => {
 			setInsertCommentData({ ...insertCommentData, commentContent: '' });
 
 			await getCommentsRefetch({ input: commentInquiry });
+			await sweetTopSmallSuccessAlert('success', 900);
 		} catch (err: any) {
 			sweetErrorHandling(err).then();
 		}
@@ -167,90 +180,132 @@ const AgentDetail: NextPage = ({ initialInput, initialComment }: any) => {
 	if (device === 'mobile') return <div>DEALER DETAIL PAGE MOBILE</div>;
 
 	return (
-		<Stack className={'dealer-detail-page'}>
-			<Stack className={'container'}>
-				<Stack className={'dealer-hero'}>
-					<div className="avatar">
-						<img
-							src={dealer?.memberImage ? `${REACT_APP_API_URL}/${dealer?.memberImage}` : '/img/profile/defaultUser.svg'}
-							alt=""
-						/>
+		<Stack className="agent-wow-page">
+			<Stack className="container agent-wow-container">
+
+				{/* HERO */}
+				<Stack className="agent-wow-hero">
+					<div className="hero-bg" />
+
+					<div className="hero-left">
+						<div className="avatar-wrap">
+							<img src={dealerImage} alt="" className="avatar" />
+							<div className="ring" />
+						</div>
+
+						<div className="hero-meta">
+							<div className="name-row" onClick={() => redirectToMemberPageHandler(dealer?._id as string)}>
+								<h1 className="name">{dealerName}</h1>
+								<span className="verified">
+									<VerifiedIcon />
+									Verified Dealer
+								</span>
+							</div>
+
+							<div className="sub-row">
+								<span className="pill">Dealer</span>
+								{dealer?.memberType ? <span className="pill soft">{dealer.memberType}</span> : null}
+								{dealer?.memberAddress ? (
+									<span className="mini">
+										<PlaceIcon />
+										{dealer.memberAddress}
+									</span>
+								) : null}
+							</div>
+
+							<div className="contact-row">
+								<span className="contact">
+									<LocalPhoneIcon />
+									{dealer?.memberPhone ?? '—'}
+								</span>
+
+								<span className="stats">
+									<b>{propertyTotal ?? 0}</b> Listings
+									<i className="dot" />
+									<b>{commentTotal ?? 0}</b> Reviews
+								</span>
+							</div>
+						</div>
 					</div>
 
-					<Box className={'info'} onClick={() => redirectToMemberPageHandler(dealer?._id as string)}>
-						<strong>{dealer?.memberFullName ?? dealer?.memberNick}</strong>
-
-						<div className="chips">
-							<span className="chip">Dealer</span>
-							{dealer?.memberType && <span className="chip soft">{dealer.memberType}</span>}
+					<div className="hero-right">
+						<div className="kpi">
+							<span className="label">Views</span>
+							<b className="value">{dealer?.memberViews ?? 0}</b>
 						</div>
-
-						<div className="phone">
-							<img src="/img/icons/call.svg" alt="" />
-							<span>{dealer?.memberPhone}</span>
+						<div className="kpi">
+							<span className="label">Likes</span>
+							<b className="value">{dealer?.memberLikes ?? 0}</b>
 						</div>
-					</Box>
+						<div className="kpi accent">
+							<span className="label">Trust</span>
+							<b className="value">High</b>
+						</div>
+					</div>
 				</Stack>
 
-				<Stack className={'dealer-cars'}>
+				{/* LISTINGS */}
+				<Stack className="agent-wow-section">
 					<div className="section-head">
-						<strong>Dealer Listings</strong>
-						<span>{propertyTotal ? `${propertyTotal} cars` : 'No cars yet'}</span>
+						<div>
+							<strong>Dealer Listings</strong>
+							<span>{propertyTotal ? `${propertyTotal} cars available` : 'No cars yet'}</span>
+						</div>
 					</div>
 
-					<Stack className={'card-wrap'}>
+					<div className="grid">
 						{dealerCars.map((property: Property) => (
-							<div className={'wrap-main'} key={property?._id}>
+							<div className="grid-item" key={property?._id}>
 								<PropertyBigCard property={property} likePropertyHandler={likePropertyHandler} />
 							</div>
 						))}
-					</Stack>
+					</div>
 
-					<Stack className={'pagination'}>
+					<div className="pager">
 						{propertyTotal ? (
 							<>
-								<Stack className="pagination-box">
-									<Pagination
-										page={searchFilter.page}
-										count={Math.ceil(propertyTotal / searchFilter.limit) || 1}
-										onChange={propertyPaginationChangeHandler}
-										shape="circular"
-										color="primary"
-									/>
-								</Stack>
-								<span>
-									Total {propertyTotal} car{propertyTotal > 1 ? 's' : ''} available
+								<Pagination
+									page={searchFilter.page}
+									count={Math.ceil(propertyTotal / searchFilter.limit) || 1}
+									onChange={propertyPaginationChangeHandler}
+									shape="circular"
+									color="primary"
+								/>
+								<span className="hint">
+									Showing page <b>{searchFilter.page}</b> of <b>{Math.ceil(propertyTotal / searchFilter.limit) || 1}</b>
 								</span>
 							</>
 						) : (
-							<div className={'no-data'}>
+							<div className="empty">
 								<img src="/img/icons/icoAlert.svg" alt="" />
 								<p>No listings found!</p>
 							</div>
 						)}
-					</Stack>
+					</div>
 				</Stack>
 
-				<Stack className={'review-box'}>
-					<Stack className={'main-intro'}>
-						<span>Dealer Reviews</span>
-						<p>Leave your honest feedback</p>
-					</Stack>
+				{/* REVIEWS */}
+				<Stack className="agent-wow-section soft">
+					<div className="section-head">
+						<div>
+							<strong>Dealer Reviews</strong>
+							<span>Leave your honest feedback</span>
+						</div>
+
+						<div className="review-chip">
+							<StarIcon />
+							<b>{commentTotal ?? 0}</b>
+							<span>reviews</span>
+						</div>
+					</div>
 
 					{commentTotal !== 0 && (
-						<Stack className={'review-wrap'}>
-							<Box component={'div'} className={'title-box'}>
-								<StarIcon />
-								<span>
-									{commentTotal} review{commentTotal > 1 ? 's' : ''}
-								</span>
-							</Box>
-
+						<div className="reviews">
 							{dealerComments?.map((comment: Comment) => (
 								<ReviewCard comment={comment} key={comment?._id} />
 							))}
 
-							<Box component={'div'} className={'pagination-box'}>
+							<div className="pager center">
 								<Pagination
 									page={commentInquiry.page}
 									count={Math.ceil(commentTotal / commentInquiry.limit) || 1}
@@ -258,13 +313,15 @@ const AgentDetail: NextPage = ({ initialInput, initialComment }: any) => {
 									shape="circular"
 									color="primary"
 								/>
-							</Box>
-						</Stack>
+							</div>
+						</div>
 					)}
 
-					<Stack className={'leave-review-config'}>
-						<Typography className={'main-title'}>Leave A Review</Typography>
-						<Typography className={'review-title'}>Your review</Typography>
+					<div className="review-form">
+						<div className="form-head">
+							<strong>Write a review</strong>
+							<span>Be polite and helpful</span>
+						</div>
 
 						<textarea
 							onChange={({ target: { value } }: any) => setInsertCommentData({ ...insertCommentData, commentContent: value })}
@@ -272,17 +329,18 @@ const AgentDetail: NextPage = ({ initialInput, initialComment }: any) => {
 							placeholder="Write something helpful..."
 						/>
 
-						<Box className={'submit-btn'} component={'div'}>
+						<div className="form-actions">
 							<Button
-								className={'submit-review'}
+								className="wow-btn"
 								disabled={insertCommentData.commentContent === '' || user?._id === ''}
 								onClick={createCommentHandler}
 							>
-								<Typography className={'title'}>Submit Review</Typography>
+								Submit Review
 							</Button>
-						</Box>
-					</Stack>
+						</div>
+					</div>
 				</Stack>
+
 			</Stack>
 		</Stack>
 	);

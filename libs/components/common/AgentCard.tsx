@@ -1,9 +1,8 @@
 import React from 'react';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { Stack, Box, Typography } from '@mui/material';
+import { Stack, Box, Typography, IconButton } from '@mui/material';
 import Link from 'next/link';
 import { REACT_APP_API_URL } from '../../config';
-import IconButton from '@mui/material/IconButton';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -15,19 +14,19 @@ interface AgentCardProps {
   likeMemberHandler: any;
 }
 
-const AgentCard = (props: AgentCardProps) => {
-  const { agent, likeMemberHandler } = props;
+const AgentCard = ({ agent, likeMemberHandler }: AgentCardProps) => {
   const device = useDeviceDetect();
   const user = useReactiveVar(userVar);
 
-  const imagePath: string = agent?.memberImage
-    ? `${REACT_APP_API_URL}/${agent?.memberImage}`
-    : '/img/profile/defaultUser.svg';
+  const imagePath =
+    agent?.memberImage
+      ? `${REACT_APP_API_URL}/${agent.memberImage}`
+      : '/img/profile/defaultUser.svg';
 
   if (device === 'mobile') return <div>DEALER CARD</div>;
 
   return (
-    <Stack className="agent-general-card">
+    <Stack className="agent-wow-card">
       <Link
         href={{
           pathname: '/agent/detail',
@@ -35,46 +34,54 @@ const AgentCard = (props: AgentCardProps) => {
         }}
       >
         <Box
-          component={'div'}
-          className={'agent-img'}
-          style={{
-            backgroundImage: `url(${imagePath})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-          }}
+          className="agent-wow-image"
+          style={{ backgroundImage: `url(${imagePath})` }}
         >
-          <div>{agent?.memberProperties} cars</div>
+          <div className="overlay" />
+
+          <div className="top-badges">
+            <span className="badge dealer">Dealer</span>
+            <span className="badge cars">
+              {agent?.memberProperties} cars
+            </span>
+          </div>
+
+          <div className="bottom-info">
+            <strong>
+              {agent?.memberFullName ?? agent?.memberNick}
+            </strong>
+            <span>Professional Dealer</span>
+          </div>
         </Box>
       </Link>
 
-      <Stack className={'agent-desc'}>
-        <Box component={'div'} className={'agent-info'}>
-          <Link
-            href={{
-              pathname: '/agent/detail',
-              query: { agentId: agent?._id }, // ✅ FIX
-            }}
-          >
-            <strong>{agent?.memberFullName ?? agent?.memberNick}</strong>
-          </Link>
-
-          <span>Dealer</span>
-        </Box>
-
-        <Box component={'div'} className={'buttons'}>
-          <IconButton color={'default'}>
+      <Stack className="agent-wow-footer">
+        <div className="stats">
+          <div className="pill">
             <RemoveRedEyeIcon />
-          </IconButton>
-          <Typography className="view-cnt">{agent?.memberViews}</Typography>
+            <span>{agent?.memberViews ?? 0}</span>
+            <small>Views</small>
+          </div>
 
-          <IconButton color={'default'} onClick={() => likeMemberHandler(user, agent?._id)}>
-            {agent?.meLiked && agent?.meLiked[0]?.myFavorite ? <FavoriteIcon color={'primary'} /> : <FavoriteBorderIcon />}
-          </IconButton>
+          <div className="pill">
+            {agent?.meLiked?.[0]?.myFavorite ? (
+              <FavoriteIcon className="liked" />
+            ) : (
+              <FavoriteBorderIcon />
+            )}
+            <span>{agent?.memberLikes ?? 0}</span>
+            <small>Likes</small>
+          </div>
+        </div>
 
-          <Typography className="view-cnt">{agent?.memberLikes}</Typography>
-        </Box>
+        <Link
+          href={{ pathname: '/agent/detail', query: { agentId: agent?._id } }}
+          className="cta"
+        >
+          View profile
+        </Link>
       </Stack>
+
     </Stack>
   );
 };

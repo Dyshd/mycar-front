@@ -279,12 +279,16 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 				{/* MENU: City */}
 				<div className={`filter-location ${openLocation ? 'on' : ''}`} ref={locationRef}>
 					{propertyLocation.map((location: string) => (
-						<div className="menu-item" onClick={() => propertyLocationSelectHandler(location)} key={location}>
-							<img src={`img/banner/cities/${location}.webp`} alt="" />
+						<div
+							className="menu-item"
+							onClick={() => propertyLocationSelectHandler(location)}
+							key={location}
+						>
 							<span>{location}</span>
 						</div>
 					))}
 				</div>
+
 
 				{/* MENU: Brand/Body */}
 				<div className={`filter-type ${openType ? 'on' : ''}`} ref={typeRef}>
