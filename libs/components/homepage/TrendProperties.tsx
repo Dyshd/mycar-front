@@ -101,7 +101,7 @@ const TrendProperties = (props: TrendPropertiesProps) => {
         <Stack className={"info-box"}>
           <Box component={"div"} className={"left"}>
             <span>Trend Cars</span>
-            <p>Trend — likes bo‘yicha</p>
+            <p>Trend based on likes</p>
           </Box>
 
           <Box component={"div"} className={"right"}>
