@@ -37,6 +37,7 @@ const MyPage: NextPage = () => {
 	const [subscribe] = useMutation(SUBSCRIBE);
 	const [unsubscribe] = useMutation(UNSUBSCRIBE);
 	const [likeTargetMember] = useMutation(LIKE_TARGET_MEMBER);
+
 	/** LIFECYCLES **/
 	useEffect(() => {
 		if (!user._id) router.push('/').then();
@@ -45,7 +46,7 @@ const MyPage: NextPage = () => {
 	/** HANDLERS **/
 	const subscribeHandler = async (id: string, refetch: any, query: any) => {
 		try {
-			console.log("id:", id);
+			console.log('id:', id);
 			if (!id) throw new Error(Messages.error1);
 			if (!user._id) throw new Error(Messages.error2);
 
@@ -54,7 +55,8 @@ const MyPage: NextPage = () => {
 					input: id,
 				},
 			});
-			await sweetTopSmallSuccessAlert("Subscribed!", 800);
+
+			await sweetTopSmallSuccessAlert('Subscribed!', 800);
 			await refetch({ input: query });
 		} catch (err: any) {
 			sweetErrorHandling(err).then();
@@ -65,18 +67,20 @@ const MyPage: NextPage = () => {
 		try {
 			if (!id) throw new Error(Messages.error1);
 			if (!user._id) throw new Error(Messages.error2);
+
 			await unsubscribe({
 				variables: {
 					input: id,
 				},
 			});
 
-			await sweetTopSmallSuccessAlert("Unsubscribed!", 800);
+			await sweetTopSmallSuccessAlert('Unsubscribed!', 800);
 			await refetch({ input: query });
 		} catch (err: any) {
 			sweetErrorHandling(err).then();
 		}
 	};
+
 	const likeMemberHandler = async (id: string, refetch: any, query: any) => {
 		try {
 			if (!id) return;
@@ -87,14 +91,14 @@ const MyPage: NextPage = () => {
 					input: id,
 				},
 			});
-			await sweetTopSmallSuccessAlert("Success!", 800);
+
+			await sweetTopSmallSuccessAlert('Success!', 800);
 			await refetch({ input: query });
 		} catch (err: any) {
-			console.log("ERROR, likeMemberHandler:", err.message);
+			console.log('ERROR, likeMemberHandler:', err.message);
 			sweetMixinErrorAlert(err.message).then();
 		}
 	};
-
 
 	const redirectToMemberPageHandler = async (memberId: string) => {
 		try {
@@ -107,17 +111,49 @@ const MyPage: NextPage = () => {
 
 	if (device === 'mobile') {
 		return <div>MY PAGE</div>;
-	} else {
-		return (
-			<div id="my-page" style={{ position: 'relative' }}>
-				<div className="container">
-					<Stack className={'my-page'}>
-						<Stack className={'back-frame'}>
-							<Stack className={'left-config'}>
+	}
+
+	return (
+		<div id="my-page" className="my-page-root">
+			<div className="container">
+				<Stack className="my-page-shell">
+					{/* Decorative background */}
+					<div className="my-page-bg-orb orb-1" />
+					<div className="my-page-bg-orb orb-2" />
+
+					<Stack className="my-page-frame">
+						{/* Sidebar */}
+						<Stack className="my-page-sidebar">
+							<div className="sidebar-inner">
 								<MyMenu />
-							</Stack>
-							<Stack className="main-config" mb={'76px'}>
-								<Stack className={'list-config'}>
+							</div>
+						</Stack>
+
+						{/* Content */}
+						<Stack className="my-page-content" mb={'76px'}>
+							<div className="content-header">
+								<div className="content-header__left">
+									<h1 className="content-title">My Page</h1>
+									<p className="content-subtitle">
+										Manage your account, listings, community activity and profile settings.
+									</p>
+								</div>
+
+								<div className="content-header__right">
+									<div className="mini-pill">
+										<span className="dot" />
+										<span className="text">
+											{user?.type ? String(user.type).toUpperCase() : 'ACCOUNT'}
+										</span>
+									</div>
+									<div className="mini-pill ghost">
+										<span className="text">{user?.nick ?? 'User'}</span>
+									</div>
+								</div>
+							</div>
+
+							<Stack className="content-body">
+								<Stack className="content-grid">
 									{category === 'addProperty' && <AddProperty />}
 									{category === 'myProperties' && <MyProperties />}
 									{category === 'myFavorites' && <MyFavorites />}
@@ -125,6 +161,7 @@ const MyPage: NextPage = () => {
 									{category === 'myArticles' && <MyArticles />}
 									{category === 'writeArticle' && <WriteArticle />}
 									{category === 'myProfile' && <MyProfile />}
+
 									{category === 'followers' && (
 										<MemberFollowers
 											subscribeHandler={subscribeHandler}
@@ -133,23 +170,23 @@ const MyPage: NextPage = () => {
 											redirectToMemberPageHandler={redirectToMemberPageHandler}
 										/>
 									)}
+
 									{category === 'followings' && (
 										<MemberFollowings
 											subscribeHandler={subscribeHandler}
 											unsubscribeHandler={unsubscribeHandler}
 											likeMemberHandler={likeMemberHandler}
 											redirectToMemberPageHandler={redirectToMemberPageHandler}
-
 										/>
 									)}
 								</Stack>
 							</Stack>
 						</Stack>
 					</Stack>
-				</div>
+				</Stack>
 			</div>
-		);
-	}
+		</div>
+	);
 };
 
 export default withLayoutBasic(MyPage);

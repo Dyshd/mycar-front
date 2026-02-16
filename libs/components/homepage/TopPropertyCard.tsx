@@ -77,7 +77,7 @@ const TopPropertyCard = (props: TopPropertyCardProps) => {
 				<div className="topx-glass">
 					<span>{seats} seats</span>
 					<i />
-					<span>{doors} doors</span>
+					<span>{doors} Gear</span>
 					<i />
 					<span>{km} km</span>
 				</div>

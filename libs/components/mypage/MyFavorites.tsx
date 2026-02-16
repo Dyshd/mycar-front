@@ -19,12 +19,8 @@ const MyFavorites: NextPage = () => {
 
 	/** APOLLO REQUESTS **/
 	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
-	const {
-		loading: getFavoritesLoading,
-		data: getFavoritesData,
-		error: getFavoritesError,
-		refetch: getFavoritesRefetch,
-	} = useQuery(GET_FAVORITES, {
+
+	const { refetch: getFavoritesRefetch } = useQuery(GET_FAVORITES, {
 		fetchPolicy: 'network-only',
 		variables: {
 			input: searchFavorites,
@@ -59,48 +55,67 @@ const MyFavorites: NextPage = () => {
 
 	if (device === 'mobile') {
 		return <div>NESTAR MY FAVORITES MOBILE</div>;
-	} else {
-		return (
-			<div id="my-favorites-page">
-				<Stack className="main-title-box">
-					<Stack className="right-box">
-						<Typography className="main-title">My Favorites</Typography>
-						<Typography className="sub-title">We are glad to see you again!</Typography>
-					</Stack>
-				</Stack>
-				<Stack className="favorites-list-box">
-					{myFavorites?.length ? (
-						myFavorites?.map((property: Property) => {
-							return <PropertyCard property={property} likePropertyHandler={likePropertyHandler} myFavorites={true} />;
-						})
-					) : (
-						<div className={'no-data'}>
-							<img src="/img/icons/icoAlert.svg" alt="" />
-							<p>No Favorites found!</p>
-						</div>
-					)}
-				</Stack>
-				{myFavorites?.length ? (
-					<Stack className="pagination-config">
-						<Stack className="pagination-box">
-							<Pagination
-								count={Math.ceil(total / searchFavorites.limit)}
-								page={searchFavorites.page}
-								shape="circular"
-								color="primary"
-								onChange={paginationHandler}
-							/>
-						</Stack>
-						<Stack className="total-result">
-							<Typography>
-								Total {total} favorite propert{total > 1 ? 'ies' : 'y'}
-							</Typography>
-						</Stack>
-					</Stack>
-				) : null}
-			</div>
-		);
 	}
+
+	return (
+		<div id="my-favorites-page" className="my-favorites-glass">
+			<Stack className="main-title-box">
+				<Stack className="right-box">
+					<Typography className="main-title">My Favorites</Typography>
+					<Typography className="sub-title">We are glad to see you again!</Typography>
+				</Stack>
+
+				{/* ixtiyoriy: stat pill (xohlasangiz qoldiring) */}
+				<Stack className="fav-stats">
+					<div className="stat-pill">
+						<span className="label">TOTAL</span>
+						<span className="value">{total}</span>
+					</div>
+					<div className="stat-pill">
+						<span className="label">PER PAGE</span>
+						<span className="value">{searchFavorites.limit}</span>
+					</div>
+				</Stack>
+			</Stack>
+
+			<Stack className="favorites-list-box">
+				{myFavorites?.length ? (
+					myFavorites.map((property: Property) => (
+						<PropertyCard
+							key={(property as any)?._id ?? `${(property as any)?.propertyTitle}-${Math.random()}`}
+							property={property}
+							likePropertyHandler={likePropertyHandler}
+							myFavorites={true}
+						/>
+					))
+				) : (
+					<div className={'no-data'}>
+						<img src="/img/icons/icoAlert.svg" alt="" />
+						<p>No Favorites found!</p>
+					</div>
+				)}
+			</Stack>
+
+			{myFavorites?.length ? (
+				<Stack className="pagination-config">
+					<Stack className="pagination-box">
+						<Pagination
+							count={Math.ceil(total / searchFavorites.limit)}
+							page={searchFavorites.page}
+							shape="circular"
+							color="primary"
+							onChange={paginationHandler}
+						/>
+					</Stack>
+					<Stack className="total-result">
+						<Typography>
+							Total {total} favorite propert{total > 1 ? 'ies' : 'y'}
+						</Typography>
+					</Stack>
+				</Stack>
+			) : null}
+		</div>
+	);
 };
 
 export default MyFavorites;

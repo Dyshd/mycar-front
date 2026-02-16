@@ -4,7 +4,7 @@ import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import PropertyBigCard from '../../libs/components/common/PropertyBigCard';
 import ReviewCard from '../../libs/components/agent/ReviewCard';
-import { Box, Button, Pagination, Stack, Typography } from '@mui/material';
+import { Button, Pagination, Stack } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import PlaceIcon from '@mui/icons-material/Place';
@@ -20,16 +20,9 @@ import { CommentInput, CommentsInquiry } from '../../libs/types/comment/comment.
 import { Comment } from '../../libs/types/comment/comment';
 import { CommentGroup } from '../../libs/enums/comment.enum';
 import { Messages, REACT_APP_API_URL } from '../../libs/config';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { CREATE_COMMENT, LIKE_TARGET_PROPERTY } from '../../apollo/user/mutation';
 import { GET_COMMENTS, GET_MEMBER, GET_PROPERTIES } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
-
-export const getStaticProps = async ({ locale }: any) => ({
-	props: {
-		...(await serverSideTranslations(locale, ['common'])),
-	},
-});
 
 const AgentDetail: NextPage = ({ initialInput, initialComment }: any) => {
 	const device = useDeviceDetect();
@@ -128,6 +121,9 @@ const AgentDetail: NextPage = ({ initialInput, initialComment }: any) => {
 	}, [dealer?.memberImage]);
 
 	const dealerName = dealer?.memberFullName ?? dealer?.memberNick ?? 'Dealer';
+
+	const viewsVal = dealer?.memberViews ?? 0;
+	const likesVal = dealer?.memberLikes ?? 0;
 
 	/** HANDLERS **/
 	const redirectToMemberPageHandler = async (memberId: string) => {
@@ -229,14 +225,21 @@ const AgentDetail: NextPage = ({ initialInput, initialComment }: any) => {
 					</div>
 
 					<div className="hero-right">
-						<div className="kpi">
-							<span className="label">Views</span>
-							<b className="value">{dealer?.memberViews ?? 0}</b>
-						</div>
-						<div className="kpi">
-							<span className="label">Likes</span>
-							<b className="value">{dealer?.memberLikes ?? 0}</b>
-						</div>
+						{/* ✅ 0 bo‘lsa ko‘rsatmaymiz */}
+						{viewsVal > 0 && (
+							<div className="kpi">
+								<span className="label">Views</span>
+								<b className="value">{viewsVal}</b>
+							</div>
+						)}
+
+						{likesVal > 0 && (
+							<div className="kpi">
+								<span className="label">Likes</span>
+								<b className="value">{likesVal}</b>
+							</div>
+						)}
+
 						<div className="kpi accent">
 							<span className="label">Trust</span>
 							<b className="value">High</b>

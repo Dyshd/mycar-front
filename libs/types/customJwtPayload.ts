@@ -1,6 +1,9 @@
 import { JwtPayload } from 'jwt-decode';
 
 export interface CustomJwtPayload extends JwtPayload {
+	nick: string;
+	type(type: any): unknown;
+	type: any;
 	_id: string;
 	memberType: string;
 	memberStatus: string;

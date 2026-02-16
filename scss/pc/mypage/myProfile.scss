@@ -1,321 +1,371 @@
 #pc-wrap {
 	#my-page {
 		#my-profile-page {
+			/* Glass vars */
+			--mp-text: rgba(255, 255, 255, 0.92);
+			--mp-muted: rgba(255, 255, 255, 0.68);
+			--mp-border: rgba(255, 255, 255, 0.14);
+			--mp-bg: rgba(255, 255, 255, 0.06);
+			--mp-dark: rgba(0, 0, 0, 0.14);
+			--mp-dark2: rgba(0, 0, 0, 0.18);
+			--mp-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+
 			width: 100%;
 			height: auto;
 			display: flex;
 			flex-direction: column;
-			gap: 20px;
+			gap: 16px;
+
 			.main-title-box {
-				width: auto;
+				width: 100%;
 				height: auto;
+				display: flex;
 				flex-direction: row;
 				justify-content: space-between;
+				align-items: center;
+				gap: 14px;
+
+				padding: 16px;
+				border-radius: 18px;
+				border: 1px solid var(--mp-border);
+				background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.06));
+				box-shadow: var(--mp-shadow);
+				backdrop-filter: blur(14px);
+				-webkit-backdrop-filter: blur(14px);
+
 				.right-box {
-					width: 315px;
+					width: auto;
+
 					.main-title {
-						color: #181a20;
+						color: var(--mp-text);
 						font-family: $font;
-						font-size: 30px;
+						font-size: 24px;
 						font-style: normal;
-						font-weight: 600;
+						font-weight: 900;
 						line-height: normal;
-						letter-spacing: 0.6px;
-						text-transform: capitalize;
 					}
+
 					.sub-title {
-						color: #181a20;
-						font-family: $font;
-						font-size: 14px;
-						font-style: normal;
-						font-weight: 400;
-						line-height: 26px;
-					}
-				}
-			}
-			.top-box {
-				width: 100%;
-				padding: 30px;
-				margin-top: 35px;
-				gap: 25px;
-				border-radius: 12px;
-				border: 1px solid #c4c4c4;
-				background: #fff;
-				box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
-				.photo-box {
-					gap: 23px;
-					.title {
-						color: #181a20;
-						font-family: $font;
-						font-size: 17px;
-						font-style: normal;
-						font-weight: 600;
-						line-height: normal;
-					}
-					.image-big-box {
-						flex-direction: row;
-						gap: 50px;
-						.image-box {
-							position: relative;
-							width: 194px;
-							height: 157px;
-							img {
-								width: 100%;
-								height: 100%;
-								object-fit: cover;
-								border-radius: 15px;
-								object-fit: cover;
-							}
-							.delete-box {
-								position: absolute;
-								top: 10px;
-								left: 10px;
-								width: 36px;
-								height: 32px;
-								background-color: #ffffff;
-								align-items: center;
-								justify-content: center;
-								border-radius: 12px;
-							}
-						}
-						.upload-big-box {
-							align-self: flex-end;
-							gap: 22px;
-							.labeler {
-								display: flex;
-								width: 210.023px;
-								height: 40.135px;
-								justify-content: center;
-								align-items: center;
-								cursor: pointer;
-								border-radius: 12px;
-								border: 1px solid #181a20;
-								p {
-									color: #181a20;
-									font-family: $font;
-									font-size: 13px;
-									font-style: normal;
-									font-weight: 600;
-									line-height: normal;
-								}
-							}
-							.upload-text {
-								color: #181a20;
-								font-family: $font;
-								font-size: 12px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: 26px;
-							}
-						}
-					}
-				}
-				.small-input-box {
-					width: 100%;
-					height: auto;
-					flex-direction: row;
-					flex-wrap: wrap;
-					gap: 30px;
-					.input-box {
-						width: 48%;
-						gap: 10px;
-						.title {
-							color: #181a20;
-							font-family: $font;
-							font-size: 12px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-						}
-						input {
-							height: 55px;
-							outline: none;
-							padding: 0px 15px;
-							border-radius: 8px;
-							border: 1px solid #ddd;
-							::placeholder {
-								color: #717171;
-								font-family: $font;
-								font-size: 12px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: 26px;
-							}
-						}
-					}
-				}
-				.address-box {
-					gap: 10px;
-					.title {
-						color: #181a20;
-						font-family: $font;
-						font-size: 12px;
-						font-style: normal;
-						font-weight: 600;
-						line-height: normal;
-					}
-					input {
-						height: 55px;
-						outline: none;
-						padding: 0px 15px;
-						border-radius: 8px;
-						border: 1px solid #ddd;
-						::placeholder {
-							color: #717171;
-							font-family: $font;
-							font-size: 12px;
-							font-style: normal;
-							font-weight: 400;
-							line-height: 26px;
-						}
-					}
-				}
-				.about-me-box {
-					gap: 10px;
-					.title {
-						color: #181a20;
-						font-family: $font;
-						font-size: 12px;
-						font-style: normal;
-						font-weight: 600;
-						line-height: normal;
-					}
-					.about-textarea {
-						height: 170px;
-						padding: 20px 15px;
-						border-radius: 8px;
-						border: 1px solid #ddd;
-						color: #717171;
-						font-family: $font;
-						font-size: 12px;
-						font-style: normal;
-						font-weight: 400;
-						line-height: 26px;
-					}
-					.update-button {
-						display: flex;
-						width: 170px;
-						height: 38px;
-						justify-content: center;
-						align-items: center;
-						gap: 10px;
-						align-self: flex-end;
-						margin-top: 30px;
-						border-radius: 12px;
-						background-color: #000000;
-						p {
-							color: #fff;
-							font-family: $font;
-							font-size: 13px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-						}
-					}
-					button:disabled {
-						background: #181a2045;
-					}
-				}
-			}
-			.bottom-box {
-				width: 100%;
-				padding: 30px;
-				gap: 25px;
-				border-radius: 12px;
-				border: 1px solid #c4c4c4;
-				background: #fff;
-				box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
-				.top-inner-box {
-					gap: 20px;
-					.title {
-						color: #181a20;
-						font-family: $font;
-						font-size: 15px;
-						font-style: normal;
-						font-weight: 600;
-						line-height: normal;
-					}
-					.old-password-box {
-						gap: 10px;
-						.title {
-							color: #181a20;
-							font-family: $font;
-							font-size: 12px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-						}
-						input {
-							width: 50%;
-							height: 55px;
-							outline: none;
-							padding: 0px 15px;
-							border-radius: 8px;
-							border: 1px solid #ddd;
-							::placeholder {
-								color: #717171;
-								font-family: $font;
-								font-size: 12px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: 26px;
-							}
-						}
-					}
-				}
-				.bottom-inner-box {
-					width: 100%;
-					flex-direction: row;
-					gap: 45px;
-					.new-password-box {
-						width: 100%;
-						gap: 10px;
-						.title {
-							color: #181a20;
-							font-family: $font;
-							font-size: 12px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-						}
-						input {
-							height: 55px;
-							outline: none;
-							padding: 0px 15px;
-							border-radius: 8px;
-							border: 1px solid #ddd;
-							::placeholder {
-								color: #717171;
-								font-family: $font;
-								font-size: 12px;
-								font-style: normal;
-								font-weight: 400;
-								line-height: 26px;
-							}
-						}
-					}
-				}
-				.change-password {
-					display: flex;
-					width: 170px;
-					height: 38px;
-					justify-content: center;
-					align-items: center;
-					gap: 10px;
-					align-self: flex-end;
-					margin-top: 18px;
-					border-radius: 12px;
-					background-color: #000000;
-					p {
-						color: #fff;
+						margin-top: 6px;
+						color: var(--mp-muted);
 						font-family: $font;
 						font-size: 13px;
 						font-style: normal;
 						font-weight: 600;
-						line-height: normal;
+						line-height: 1.35;
+					}
+				}
+
+				.profile-actions {
+					display: flex;
+					flex-direction: row;
+					gap: 10px;
+
+					.ghost-btn {
+						height: 42px;
+						padding: 0 14px;
+						border-radius: 14px;
+						border: 1px solid rgba(255, 255, 255, 0.14);
+						background: rgba(255, 255, 255, 0.06);
+
+						p {
+							color: rgba(255, 255, 255, 0.86);
+							font-weight: 900;
+							font-size: 12px;
+							letter-spacing: 0.4px;
+						}
+
+						&:hover {
+							background: rgba(255, 255, 255, 0.1);
+						}
+					}
+				}
+			}
+
+			.top-box {
+				width: 100%;
+				padding: 18px;
+				gap: 18px;
+				border-radius: 18px;
+
+				border: 1px solid var(--mp-border);
+				background: var(--mp-bg);
+				box-shadow: var(--mp-shadow);
+				backdrop-filter: blur(14px);
+				-webkit-backdrop-filter: blur(14px);
+
+				.photo-box {
+					gap: 14px;
+
+					.title {
+						color: rgba(255, 255, 255, 0.86);
+						font-family: $font;
+						font-size: 13px;
+						font-style: normal;
+						font-weight: 900;
+						letter-spacing: 0.6px;
+						text-transform: uppercase;
+					}
+
+					.image-big-box {
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+						gap: 18px;
+						flex-wrap: wrap;
+
+						.image-box {
+							position: relative;
+							width: 220px;
+							height: 220px;
+							border-radius: 22px;
+							overflow: hidden;
+
+							border: 1px solid rgba(255, 255, 255, 0.14);
+							background: rgba(0, 0, 0, 0.18);
+
+							img {
+								width: 100%;
+								height: 100%;
+								object-fit: cover;
+								display: block;
+							}
+
+							.img-loading {
+								position: absolute;
+								inset: 0;
+								display: flex;
+								flex-direction: column;
+								align-items: center;
+								justify-content: center;
+								gap: 10px;
+								background: rgba(0, 0, 0, 0.45);
+								backdrop-filter: blur(10px);
+
+								span {
+									width: 28px;
+									height: 28px;
+									border-radius: 999px;
+									border: 3px solid rgba(255, 255, 255, 0.25);
+									border-top-color: rgba(255, 255, 255, 0.9);
+									animation: spin 0.9s linear infinite;
+								}
+
+								p {
+									color: rgba(255, 255, 255, 0.9);
+									font-weight: 900;
+									font-size: 12px;
+								}
+							}
+						}
+
+						.upload-big-box {
+							display: flex;
+							flex-direction: column;
+							gap: 10px;
+
+							.labeler {
+								display: flex;
+								width: 220px;
+								height: 44px;
+								justify-content: center;
+								align-items: center;
+								cursor: pointer;
+								border-radius: 14px;
+
+								border: 1px solid rgba(255, 255, 255, 0.16);
+								background: rgba(255, 255, 255, 0.06);
+
+								p {
+									color: rgba(255, 255, 255, 0.9);
+									font-family: $font;
+									font-size: 12px;
+									font-style: normal;
+									font-weight: 900;
+									letter-spacing: 0.4px;
+								}
+
+								&:hover {
+									background: rgba(255, 255, 255, 0.1);
+								}
+							}
+
+							.labeler.disabled {
+								opacity: 0.6;
+								pointer-events: none;
+							}
+
+							.upload-text {
+								color: rgba(255, 255, 255, 0.65);
+								font-family: $font;
+								font-size: 12px;
+								font-style: normal;
+								font-weight: 700;
+								line-height: 18px;
+							}
+						}
+					}
+				}
+
+				.small-input-box {
+					width: 100%;
+					display: flex;
+					flex-direction: row;
+					flex-wrap: wrap;
+					gap: 14px;
+
+					.input-box {
+						width: calc(50% - 7px);
+						display: flex;
+						flex-direction: column;
+						gap: 8px;
+
+						.title {
+							color: rgba(255, 255, 255, 0.72);
+							font-family: $font;
+							font-size: 11px;
+							font-style: normal;
+							font-weight: 900;
+							letter-spacing: 0.6px;
+							text-transform: uppercase;
+						}
+
+						input {
+							height: 52px;
+							outline: none;
+							padding: 0px 14px;
+							border-radius: 14px;
+
+							border: 1px solid rgba(255, 255, 255, 0.14);
+							background: rgba(0, 0, 0, 0.14);
+							color: rgba(255, 255, 255, 0.9);
+
+							&::placeholder {
+								color: rgba(255, 255, 255, 0.5);
+								font-family: $font;
+								font-size: 12px;
+								font-style: normal;
+								font-weight: 700;
+							}
+						}
+					}
+				}
+
+				.address-box {
+					display: flex;
+					flex-direction: column;
+					gap: 8px;
+
+					.title {
+						color: rgba(255, 255, 255, 0.72);
+						font-family: $font;
+						font-size: 11px;
+						font-style: normal;
+						font-weight: 900;
+						letter-spacing: 0.6px;
+						text-transform: uppercase;
+					}
+
+					input {
+						height: 52px;
+						outline: none;
+						padding: 0px 14px;
+						border-radius: 14px;
+
+						border: 1px solid rgba(255, 255, 255, 0.14);
+						background: rgba(0, 0, 0, 0.14);
+						color: rgba(255, 255, 255, 0.9);
+
+						&::placeholder {
+							color: rgba(255, 255, 255, 0.5);
+							font-family: $font;
+							font-size: 12px;
+							font-style: normal;
+							font-weight: 700;
+						}
+					}
+				}
+
+				.about-me-box {
+					display: flex;
+					align-items: flex-end;
+
+					.update-button {
+						display: flex;
+						width: 210px;
+						height: 46px;
+						justify-content: center;
+						align-items: center;
+						gap: 10px;
+						border-radius: 16px;
+
+						border: 1px solid rgba(255, 255, 255, 0.16);
+						background: linear-gradient(90deg, rgba(255, 59, 48, 0.92), rgba(255, 138, 0, 0.86));
+						box-shadow: 0 16px 30px rgba(0, 0, 0, 0.28);
+
+						p {
+							color: #fff;
+							font-family: $font;
+							font-size: 12px;
+							font-style: normal;
+							font-weight: 900;
+							letter-spacing: 0.4px;
+						}
+
+						svg {
+							opacity: 0.95;
+						}
+					}
+
+					button:disabled {
+						background: rgba(255, 255, 255, 0.08) !important;
+						border-color: rgba(255, 255, 255, 0.12) !important;
+
+						p {
+							color: rgba(255, 255, 255, 0.5) !important;
+						}
+					}
+				}
+			}
+
+			@media (max-width: 900px) {
+				.top-box {
+					.photo-box {
+						.image-big-box {
+							.image-box {
+								width: 100%;
+								height: 240px;
+							}
+							.upload-big-box {
+								.labeler {
+									width: 100%;
+								}
+							}
+						}
+					}
+
+					.small-input-box {
+						.input-box {
+							width: 100%;
+						}
+					}
+
+					.about-me-box {
+						.update-button {
+							width: 100%;
+						}
 					}
 				}
 			}
 		}
+	}
+}
+
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
 	}
 }

@@ -102,7 +102,7 @@ const PopularPropertyCard = (props: PopularPropertyCardProps) => {
 
         <div className="popx-chips">
           <div className="chip">{seats} seats</div>
-          <div className="chip">{doors} doors</div>
+          <div className="chip">{doors} Gear</div>
           <div className="chip">{km} km</div>
         </div>
 

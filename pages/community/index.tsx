@@ -110,12 +110,12 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 					<TabContext value={searchCommunity.search.articleCategory}>
 						<Stack className="main-box">
 							<Stack className="left-config">
-								<Stack className={'image-info'}>
-									<img src={'/img/logo/logoText.svg'} />
+								{/* <Stack className={'image-info'}>
+									<img src={'/img/logo/mycar-logo.png'} />
 									<Stack className={'community-name'}>
 										<Typography className={'name'}>Nestar Community</Typography>
 									</Stack>
-								</Stack>
+								</Stack> */}
 
 								<TabList
 									orientation="vertical"

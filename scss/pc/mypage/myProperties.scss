@@ -1,250 +1,475 @@
 #pc-wrap {
 	#my-page {
 		#my-property-page {
+			/* ===== Glass Theme Vars ===== */
+			--mp-text: rgba(255, 255, 255, 0.92);
+			--mp-muted: rgba(255, 255, 255, 0.68);
+			--mp-border: rgba(255, 255, 255, 0.14);
+			--mp-bg: rgba(255, 255, 255, 0.06);
+			--mp-dark: rgba(0, 0, 0, 0.14);
+			--mp-dark2: rgba(0, 0, 0, 0.18);
+			--mp-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+
 			width: 100%;
 			height: auto;
 			display: flex;
 			flex-direction: column;
-			gap: 57px;
+			gap: 16px;
+
+			/* =========================
+         HEADER (TITLE + STATS)
+      ========================== */
 			.main-title-box {
-				width: auto;
+				width: 100%;
 				height: auto;
 				flex-direction: row;
 				justify-content: space-between;
+				align-items: center;
+
+				padding: 16px;
+				border-radius: 18px;
+				border: 1px solid var(--mp-border);
+				background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.06));
+				box-shadow: var(--mp-shadow);
+				backdrop-filter: blur(14px);
+				-webkit-backdrop-filter: blur(14px);
+
 				.right-box {
-					width: 315px;
+					width: auto;
+
 					.main-title {
-						color: #181a20;
+						color: var(--mp-text);
 						font-family: $font;
-						font-size: 30px;
+						font-size: 24px;
+						font-style: normal;
+						font-weight: 900;
+						line-height: normal;
+					}
+
+					.sub-title {
+						margin-top: 6px;
+						color: var(--mp-muted);
+						font-family: $font;
+						font-size: 13px;
 						font-style: normal;
 						font-weight: 600;
-						line-height: normal;
-						letter-spacing: 0.6px;
-						text-transform: capitalize;
+						line-height: 1.35;
 					}
-					.sub-title {
-						color: #181a20;
-						font-family: $font;
-						font-size: 14px;
-						font-style: normal;
-						font-weight: 400;
-						line-height: 26px;
+				}
+
+				/* Stats (TOTAL / PER PAGE) */
+				.mp-stats {
+					display: flex;
+					flex-direction: row;
+					gap: 10px;
+
+					.stat-pill {
+						display: flex;
+						flex-direction: column;
+						gap: 4px;
+						padding: 10px 14px;
+						border-radius: 16px;
+						border: 1px solid rgba(255, 255, 255, 0.14);
+						background: var(--mp-dark);
+
+						.label {
+							color: rgba(255, 255, 255, 0.62);
+							font-size: 11px;
+							font-weight: 900;
+							letter-spacing: 0.6px;
+							text-transform: uppercase;
+						}
+
+						.value {
+							color: rgba(255, 255, 255, 0.92);
+							font-size: 16px;
+							font-weight: 900;
+						}
 					}
 				}
 			}
+
+			/* =========================
+         TABS
+      ========================== */
 			.property-list-box {
 				width: 100%;
 				height: auto;
+
 				.tab-name-box {
 					width: 100%;
-					height: 49px;
+					height: auto;
 					flex-direction: row;
 					justify-content: center;
-					align-items: flex-end;
-					gap: 10px;
-					border-radius: 12px 12px 0px 0px;
-					background: rgba(143, 143, 143, 0.08);
-					border-radius: 12px 12px 0px 0px;
-					border: 1px solid rgba(196, 196, 196, 0.79);
-					.tab-name {
-						width: 110px;
-						height: 32px;
-						display: flex;
-						justify-content: center;
-						align-items: center;
-						cursor: pointer;
-						color: #000;
-						font-family: $font;
-						font-size: 16px;
-						font-style: normal;
-						font-weight: 500;
-						line-height: 26px;
-					}
+					align-items: center;
+					gap: 12px;
+					padding: 14px;
+
+					border-radius: 18px 18px 0 0;
+					border: 1px solid var(--mp-border);
+					background: var(--mp-dark);
+					backdrop-filter: blur(14px);
+					-webkit-backdrop-filter: blur(14px);
+
+					.tab-name,
 					.active-tab-name {
-						width: 110px;
-						height: 32px;
+						width: auto;
+						height: 44px;
 						display: flex;
 						justify-content: center;
 						align-items: center;
-						border-bottom: 2px solid #eb6753;
+
+						padding: 0 18px;
+						border-radius: 14px;
+
 						cursor: pointer;
-						color: #eb6753;
+						user-select: none;
+						transition: 160ms ease;
+
 						font-family: $font;
-						font-size: 16px;
+						font-size: 13px;
 						font-style: normal;
-						font-weight: 600;
-						line-height: 26px;
+						font-weight: 900;
+						line-height: normal;
+					}
+
+					.tab-name {
+						color: rgba(255, 255, 255, 0.72);
+						border: 1px solid rgba(255, 255, 255, 0.14);
+						background: rgba(255, 255, 255, 0.06);
+					}
+
+					.tab-name:hover {
+						transform: translateY(-1px);
+					}
+
+					.active-tab-name {
+						color: rgba(255, 255, 255, 0.95);
+						border: 1px solid rgba(255, 255, 255, 0.18);
+						background: linear-gradient(90deg, rgba(255, 59, 48, 0.9), rgba(255, 138, 0, 0.85));
+						box-shadow: 0 14px 26px rgba(0, 0, 0, 0.25);
 					}
 				}
 			}
+
+			/* =========================
+         LIST BOX + TABLE HEADER
+      ========================== */
 			.list-box {
 				width: 100%;
 				height: auto;
-				min-height: 700px;
-				padding: 30px 28px;
-				border-radius: 0px 0px 12px 12px;
-				border: 1px solid rgba(196, 196, 196, 0.79);
+				min-height: 520px;
+
+				padding: 14px;
+				border-radius: 0 0 18px 18px;
+
+				border: 1px solid var(--mp-border);
 				border-top: none;
-				background: #fff;
-				box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
+				background: var(--mp-bg);
+				box-shadow: var(--mp-shadow);
+				backdrop-filter: blur(14px);
+				-webkit-backdrop-filter: blur(14px);
+
 				.listing-title-box {
 					width: 100%;
 					height: auto;
-					flex-direction: row;
-					gap: 90px;
-					padding: 18px 15px 18px 33px;
-					border-radius: 12px;
-					background: #f6f6f6;
+					padding: 12px 14px;
+
+					border-radius: 16px;
+					background: var(--mp-dark2);
+					border: 1px solid rgba(255, 255, 255, 0.1);
+
+					display: grid;
+					grid-template-columns: 2.2fr 1.1fr 1fr 0.6fr 1fr;
+					align-items: center;
+					column-gap: 14px;
+
 					.title-text {
-						color: #181a20;
+						color: rgba(255, 255, 255, 0.68);
 						font-family: $font;
-						font-size: 15px;
+						font-size: 11px;
 						font-style: normal;
-						font-weight: 600;
+						font-weight: 900;
 						line-height: normal;
+						letter-spacing: 0.6px;
+						text-transform: uppercase;
 					}
+
 					:first-child {
-						margin-right: 138px;
+						margin-right: 0;
 					}
 				}
+
+				/* Empty */
+				.no-data {
+					margin-top: 18px;
+					padding: 26px 16px;
+					border-radius: 16px;
+					border: 1px dashed rgba(255, 255, 255, 0.18);
+					background: var(--mp-dark);
+					text-align: center;
+
+					p {
+						margin-top: 10px;
+						color: rgba(255, 255, 255, 0.78);
+						font-weight: 800;
+					}
+				}
+
+				/* =========================
+           PROPERTY CARD ROW
+        ========================== */
 				.property-card-box {
 					width: 100%;
 					height: auto;
-					flex-direction: row;
-					margin-top: 30px;
-					padding-bottom: 30px;
-					border-bottom: 1px solid #ddd;
+
+					margin-top: 12px;
+					padding: 16px 18px;
+
+					border-radius: 18px;
+					border: 1px solid rgba(255, 255, 255, 0.12);
+					background: var(--mp-dark);
+					transition: 160ms ease;
+
+					display: grid;
+					grid-template-columns: 2.2fr 1.1fr 1fr 0.6fr 1fr;
+					align-items: center;
+					column-gap: 14px;
+
+					&:hover {
+						transform: translateY(-1px);
+						background: var(--mp-dark2);
+						border-color: rgba(255, 255, 255, 0.18);
+					}
+
+					/* LISTING cell (img + info) */
 					.image-box {
-						width: 110px;
-						height: 90px;
-						overflow: hidden;
-						margin-right: 25px;
-						padding-top: 1px;
+						width: auto;
+						height: auto;
+						overflow: visible;
+						margin-right: 0;
+						padding-top: 0;
+
+						display: flex;
+						align-items: center;
+						gap: 14px;
+
 						img {
-							width: 100%;
-							height: 100%;
-							object-fit: contain;
-							border-radius: 12px;
+							width: 140px;
+							height: 96px;
+							object-fit: cover;
+							border-radius: 16px;
+							border: 1px solid rgba(255, 255, 255, 0.14);
 						}
 					}
+
 					.information-box {
-						width: 200px;
+						width: 100%;
 						height: auto;
-						padding: 5px 0px;
+						padding: 0;
+
 						.name {
+							margin-bottom: 6px;
+							color: rgba(255, 255, 255, 0.92);
+							font-family: $font;
+							font-size: 14px;
+							font-style: normal;
+							font-weight: 900;
+							line-height: normal;
+						}
+
+						.address {
 							margin-bottom: 8px;
-							color: #181a20;
+							color: rgba(255, 255, 255, 0.62);
+							font-family: $font;
+							font-size: 12px;
+							font-style: normal;
+							font-weight: 700;
+							line-height: normal;
+						}
+
+						.price {
+							color: rgba(255, 255, 255, 0.86);
 							font-family: $font;
 							font-size: 13px;
 							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-						}
-						.address {
-							margin-bottom: 13px;
-							color: #717171;
-							font-family: $font;
-							font-size: 11px;
-							font-style: normal;
-							font-weight: 400;
-							line-height: normal;
-						}
-						.price {
-							color: #181a20;
-							font-family: $font;
-							font-size: 15px;
-							font-style: normal;
-							font-weight: 400;
+							font-weight: 900;
 							line-height: normal;
 						}
 					}
+
+					/* Published center */
 					.date-box {
-						width: 135px;
+						width: 100%;
 						height: 100%;
 						align-items: center;
 						justify-content: center;
-						margin-right: 55px;
+						margin-right: 0;
+
 						.date {
-							color: #181a20;
+							color: rgba(255, 255, 255, 0.78);
 							font-family: $font;
 							font-size: 12px;
 							font-style: normal;
-							font-weight: 400;
-							line-height: 26px;
+							font-weight: 800;
+							line-height: normal;
+							text-align: center;
 						}
 					}
+
+					/* Status perfect center */
 					.status-box {
-						width: 100px;
+						width: 100%;
 						height: 100%;
 						align-items: center;
 						justify-content: center;
-						margin-right: 60px;
+						margin-right: 0;
+
 						.coloured-box {
-							width: 93px;
-							height: 36px;
+							width: 140px;
+							height: 42px;
 							align-items: center;
 							justify-content: center;
-							border-radius: 60px;
+
+							border-radius: 999px;
 							cursor: pointer;
+
+							border: 1px solid rgba(255, 255, 255, 0.14);
+							background: rgba(255, 255, 255, 0.06);
+
+							display: flex;
+
 							.status {
+								width: 100%;
+								text-align: center;
 								font-family: $font;
 								font-size: 12px;
 								font-style: normal;
-								font-weight: 400;
-								line-height: 26px;
+								font-weight: 900;
+								line-height: normal;
+								letter-spacing: 0.6px;
+								color: rgba(255, 255, 255, 0.9);
 							}
 						}
 					}
+
+					/* Views center */
 					.views-box {
-						width: 35px;
+						width: 100%;
 						height: 100%;
 						align-items: center;
 						justify-content: center;
-						margin-right: 75px;
+						margin-right: 0;
+
 						.views {
-							color: #181a20;
+							color: rgba(255, 255, 255, 0.86);
 							font-family: $font;
 							font-size: 12px;
 							font-style: normal;
-							font-weight: 400;
-							line-height: 26px;
+							font-weight: 900;
+							line-height: normal;
+							text-align: center;
 						}
 					}
+
+					/* Action right, yonma-yon */
 					.action-box {
-						width: auto;
+						width: 100%;
 						height: 100%;
 						flex-direction: row;
 						align-items: center;
-						justify-content: center;
+						justify-content: flex-end;
+						gap: 10px;
+
 						.icon-button {
-							width: 40px;
-							height: 40px;
-							border-radius: 4px;
-							:hover {
-								background: #f6f6f6;
+							width: 44px;
+							height: 44px;
+							border-radius: 14px;
+							border: 1px solid rgba(255, 255, 255, 0.14);
+							background: rgba(255, 255, 255, 0.06);
+
+							display: flex;
+							align-items: center;
+							justify-content: center;
+
+							&:hover {
+								background: rgba(255, 255, 255, 0.1);
 							}
+
 							.buttons {
-								color: #181a20;
+								color: rgba(255, 255, 255, 0.92);
 							}
 						}
 					}
 				}
+
+				/* Pagination */
 				.pagination-config {
 					width: 100%;
 					height: auto;
 					justify-content: center;
 					align-items: center;
-					margin-top: 30px;
+					margin-top: 18px;
+
 					.total-result {
 						p {
-							color: #181a20;
+							color: rgba(255, 255, 255, 0.7);
 							text-align: center;
 							font-family: $font;
-							font-size: 14px;
+							font-size: 12px;
 							font-style: normal;
-							font-weight: 400;
-							line-height: 26px;
+							font-weight: 700;
+							line-height: 20px;
+						}
+					}
+				}
+			}
+
+			/* =========================
+         RESPONSIVE
+      ========================== */
+			@media (max-width: 1100px) {
+				.list-box {
+					.listing-title-box {
+						grid-template-columns: 2.2fr 1.1fr 1fr 0.6fr;
+					}
+					.property-card-box {
+						grid-template-columns: 2.2fr 1.1fr 1fr 0.6fr;
+					}
+				}
+			}
+
+			@media (max-width: 900px) {
+				.main-title-box {
+					flex-direction: column;
+					align-items: flex-start;
+					gap: 12px;
+				}
+
+				.list-box {
+					.listing-title-box {
+						display: none;
+					}
+
+					.property-card-box {
+						display: flex;
+						flex-direction: column;
+						align-items: stretch;
+						gap: 12px;
+					}
+
+					.property-card-box {
+						.image-box {
+							width: 100%;
+
+							img {
+								width: 100%;
+								height: 180px;
+							}
+						}
+
+						.action-box {
+							justify-content: flex-start;
 						}
 					}
 				}
