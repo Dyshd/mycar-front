@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { Button, Stack, Typography } from "@mui/material";
 import useDeviceDetect from "../../hooks/useDeviceDetect";
 import { PropertyLocation, PropertyType, PropertyRentPeriod } from "../../enums/property.enum";
-import { REACT_APP_API_URL, propertySquare } from "../../config";
+import { REACT_APP_API_URL } from "../../config";
 import { PropertyInput } from "../../types/property/property.input";
 import axios from "axios";
 import { getJwtToken } from "../../auth";
@@ -12,6 +12,8 @@ import { useMutation, useQuery, useReactiveVar } from "@apollo/client";
 import { userVar } from "../../../apollo/store";
 import { CREATE_PROPERTY, UPDATE_PROPERTY } from "../../../apollo/user/mutation";
 import { GET_PROPERTY } from "../../../apollo/user/query";
+import { TRANSMISSIONS } from "../../utils/transmission";
+import { ReactI18NextChild } from "react-i18next";
 
 const MAX_IMAGES = 5;
 
@@ -52,23 +54,24 @@ const AddProperty = ({ initialValues }: any) => {
 
   useEffect(() => {
     if (!router.query.propertyId) return;
+    const p = getPropertyData?.getProperty;
+    if (!p) return;
 
     setInsertPropertyData((prev) => ({
       ...prev,
-      propertyTitle: getPropertyData?.getProperty?.propertyTitle ?? "",
-      propertyPrice: getPropertyData?.getProperty?.propertyPrice ?? 0,
-      propertyType: getPropertyData?.getProperty?.propertyType ?? ("" as any),
-      propertyLocation: getPropertyData?.getProperty?.propertyLocation ?? ("" as any),
-      propertyAddress: getPropertyData?.getProperty?.propertyAddress ?? "",
-      propertyBarter: getPropertyData?.getProperty?.propertyBarter ?? false,
-      propertyRent: getPropertyData?.getProperty?.propertyRent ?? false,
-      propertyRentPeriod:
-        getPropertyData?.getProperty?.propertyRentPeriod || PropertyRentPeriod.MONTHLY,
-      propertyRooms: getPropertyData?.getProperty?.propertyRooms ?? 0,
-      propertyBeds: getPropertyData?.getProperty?.propertyBeds ?? 0,
-      propertySquare: getPropertyData?.getProperty?.propertySquare ?? 0,
-      propertyDesc: getPropertyData?.getProperty?.propertyDesc ?? "",
-      propertyImages: (getPropertyData?.getProperty?.propertyImages ?? []).map(normalizeUploadPath),
+      propertyTitle: p?.propertyTitle ?? "",
+      propertyPrice: p?.propertyPrice ?? 0,
+      propertyType: p?.propertyType ?? ("" as any),
+      propertyLocation: p?.propertyLocation ?? ("" as any),
+      propertyAddress: p?.propertyAddress ?? "",
+      propertyBarter: p?.propertyBarter ?? false,
+      propertyRent: p?.propertyRent ?? false,
+      propertyRentPeriod: p?.propertyRentPeriod || PropertyRentPeriod.MONTHLY,
+      propertyRooms: p?.propertyRooms ?? 0,
+      propertyBeds: p?.propertyBeds ?? 0,
+      propertySquare: p?.propertySquare ?? 0, // mileage
+      propertyDesc: p?.propertyDesc ?? "",
+      propertyImages: (p?.propertyImages ?? []).map(normalizeUploadPath),
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getPropertyLoading, getPropertyData]);
@@ -84,8 +87,11 @@ const AddProperty = ({ initialValues }: any) => {
 
   const GRAPHQL_URL =
     (process.env.NEXT_PUBLIC_API_GRAPHQL_URL as string) ||
-    (process.env.REACT_APP_API_GRAPHQL_URL as string) ||
+    (process.env.NEXT_PUBLIC_REACT_APP_API_GRAPHQL_URL as string) || // ba’zi projectlarda shunaqa bo‘ladi
+    (process.env.REACT_APP_API_GRAPHQL_URL as string) || // agar next.config.js bilan clientga chiqayotgan bo‘lsa
+    (process.env.NEXT_PUBLIC_GRAPHQL_URL as string) ||
     "";
+
 
   const uploadImages = async (files: FileList | File[]) => {
     try {
@@ -94,6 +100,7 @@ const AddProperty = ({ initialValues }: any) => {
 
       const existingCount = insertPropertyData.propertyImages?.length || 0;
       const remaining = MAX_IMAGES - existingCount;
+
       if (remaining <= 0) throw new Error(`Max ${MAX_IMAGES} images. Remove one to upload new.`);
 
       const toUpload = picked.slice(0, remaining);
@@ -116,7 +123,11 @@ const AddProperty = ({ initialValues }: any) => {
       formData.append("map", JSON.stringify(map));
       toUpload.forEach((file, idx) => formData.append(String(idx), file));
 
-      if (!GRAPHQL_URL) throw new Error("GRAPHQL URL missing (NEXT_PUBLIC_API_GRAPHQL_URL)");
+      // if (!GRAPHQL_URL) throw new Error("GRAPHQL URL missing (NEXT_PUBLIC_API_GRAPHQL_URL)");
+      if (!GRAPHQL_URL) {
+        console.log("GRAPHQL_URL is empty. Check env variables!");
+        throw new Error("Upload config missing. Set NEXT_PUBLIC_API_GRAPHQL_URL");
+      }
 
       const response = await axios.post(GRAPHQL_URL, formData, {
         headers: {
@@ -140,13 +151,6 @@ const AddProperty = ({ initialValues }: any) => {
     }
   };
 
-  const onDrop = async (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!e.dataTransfer?.files?.length) return;
-    await uploadImages(e.dataTransfer.files);
-  };
-
   const doDisabledCheck = () => {
     if (
       !insertPropertyData.propertyTitle ||
@@ -158,17 +162,16 @@ const AddProperty = ({ initialValues }: any) => {
       !insertPropertyData.propertyAddress ||
       !insertPropertyData.propertyRooms ||
       !insertPropertyData.propertyBeds ||
-      !insertPropertyData.propertySquare ||
+      insertPropertyData.propertySquare === 0 ||
       !insertPropertyData.propertyDesc ||
       (insertPropertyData.propertyImages?.length || 0) === 0
-    )
-      return true;
+    ) return true;
 
     if (insertPropertyData.propertyRent && !insertPropertyData.propertyRentPeriod) return true;
 
     return false;
   };
-
+  console.log("PAYLOAD =>", insertPropertyData);
   const insertPropertyHandler = useCallback(async () => {
     try {
       const payload: any = { ...insertPropertyData };
@@ -178,9 +181,13 @@ const AddProperty = ({ initialValues }: any) => {
       await sweetMixinSuccessAlert("Property created successfully");
       await router.push({ pathname: "/mypage", query: { category: "myProperties" } });
     } catch (err) {
+      console.log("CREATE_PROPERTY ERROR:", err);
+      // console.log("GRAPHQL ERRORS:", err?.graphQLErrors);
+      // console.log("NETWORK ERROR:", err?.networkError);
       sweetErrorHandling(err).then();
+
     }
-  }, [insertPropertyData]);
+  }, [insertPropertyData, createProperty, router]);
 
   const updatePropertyHandler = useCallback(async () => {
     try {
@@ -194,7 +201,7 @@ const AddProperty = ({ initialValues }: any) => {
     } catch (err) {
       sweetErrorHandling(err).then();
     }
-  }, [insertPropertyData, getPropertyData]);
+  }, [insertPropertyData, updateProperty, getPropertyData, router]);
 
   if (device === "mobile") return <div>ADD NEW PROPERTY MOBILE PAGE</div>;
 
@@ -210,7 +217,6 @@ const AddProperty = ({ initialValues }: any) => {
       </Stack>
 
       <Stack className="config">
-        {/* ✅ FORM (mana siz so‘ragan “malumot to‘ldirish joyi”) */}
         <Stack className="description-box">
           <Stack className="config-column">
             <Typography className="title">Title</Typography>
@@ -232,9 +238,10 @@ const AddProperty = ({ initialValues }: any) => {
                 type="number"
                 className="description-input"
                 placeholder="Price"
-                value={insertPropertyData.propertyPrice}
+                min={0}
+                value={insertPropertyData.propertyPrice || ""}
                 onChange={({ target: { value } }) =>
-                  setInsertPropertyData({ ...insertPropertyData, propertyPrice: parseInt(value || "0") })
+                  setInsertPropertyData({ ...insertPropertyData, propertyPrice: parseInt(value || "0", 10) })
                 }
               />
             </Stack>
@@ -348,14 +355,17 @@ const AddProperty = ({ initialValues }: any) => {
               <Typography className="title">Transmission</Typography>
               <select
                 className="select-description"
-                value={insertPropertyData.propertyRooms || "select"}
+                value={insertPropertyData.propertyRooms ? String(insertPropertyData.propertyRooms) : "select"}
                 onChange={({ target: { value } }) =>
-                  setInsertPropertyData({ ...insertPropertyData, propertyRooms: parseInt(value || "0") })
+                  setInsertPropertyData({
+                    ...insertPropertyData,
+                    propertyRooms: value === "select" ? 0 : parseInt(value, 10),
+                  })
                 }
               >
                 <option disabled value="select">Select</option>
-                {[1, 2, 3, 4, 5].map((room) => (
-                  <option value={room} key={room}>{room}</option>
+                {TRANSMISSIONS.map((t: { value: React.Key | null | undefined; label: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | Iterable<ReactI18NextChild> | null | undefined; }) => (
+                  <option value={String(t.value)} key={t.value}>{t.label}</option>
                 ))}
               </select>
             </Stack>
@@ -364,34 +374,40 @@ const AddProperty = ({ initialValues }: any) => {
               <Typography className="title">Seats</Typography>
               <select
                 className="select-description"
-                value={insertPropertyData.propertyBeds || "select"}
+                value={insertPropertyData.propertyBeds ? String(insertPropertyData.propertyBeds) : "select"}
                 onChange={({ target: { value } }) =>
-                  setInsertPropertyData({ ...insertPropertyData, propertyBeds: parseInt(value || "0") })
+                  setInsertPropertyData({
+                    ...insertPropertyData,
+                    propertyBeds: value === "select" ? 0 : parseInt(value, 10),
+                  })
                 }
               >
                 <option disabled value="select">Select</option>
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((bed) => (
-                  <option value={bed} key={bed}>{bed}</option>
+                {[2, 4, 5, 7, 8].map((bed) => (
+                  <option value={String(bed)} key={bed}>{bed}</option>
                 ))}
               </select>
             </Stack>
 
             <Stack className="price-year-after-price">
               <Typography className="title">Mileage (km)</Typography>
-              <select
-                className="select-description"
-                value={insertPropertyData.propertySquare || "select"}
-                onChange={({ target: { value } }) =>
-                  setInsertPropertyData({ ...insertPropertyData, propertySquare: parseInt(value || "0") })
-                }
-              >
-                <option disabled value="select">Select</option>
-                {propertySquare.map((sq) =>
-                  sq !== 0 ? (
-                    <option value={sq} key={sq}>{sq}</option>
-                  ) : null
-                )}
-              </select>
+              <input
+                type="number"
+                className="description-input"
+                placeholder="e.g. 120000"
+                min={0}
+                max={2000000}
+                step={1}
+                value={insertPropertyData.propertySquare === 0 ? "" : String(insertPropertyData.propertySquare)}
+                onChange={({ target: { value } }) => {
+                  const num = value === "" ? 0 : Math.max(0, Math.min(2000000, parseInt(value, 10) || 0));
+                  setInsertPropertyData({ ...insertPropertyData, propertySquare: num });
+                }}
+                onWheel={(e) => (e.target as HTMLInputElement).blur()}
+              />
+              <Typography sx={{ fontSize: "12px", opacity: 0.7, mt: "6px" }}>
+                Example: 85000, 120000, 235000
+              </Typography>
             </Stack>
           </Stack>
 
@@ -408,7 +424,7 @@ const AddProperty = ({ initialValues }: any) => {
           </Stack>
         </Stack>
 
-        {/* ✅ UPLOAD */}
+        {/* UPLOAD */}
         <div className="upload-head">
           <div>
             <Typography className="upload-title">Upload photos</Typography>
@@ -427,10 +443,7 @@ const AddProperty = ({ initialValues }: any) => {
         <Stack className="images-box">
           <div
             className="upload-box"
-            onDragOver={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
+            onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
             onDrop={async (e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -463,9 +476,9 @@ const AddProperty = ({ initialValues }: any) => {
               ref={inputRef}
               type="file"
               hidden
-              onChange={(e) => uploadImages(e.target.files as any)}
               multiple
               accept="image/jpg, image/jpeg, image/png"
+              onChange={(e) => uploadImages(e.target.files as any)}
             />
           </div>
 
@@ -475,9 +488,7 @@ const AddProperty = ({ initialValues }: any) => {
               return (
                 <div className="image-box" key={image}>
                   <img src={imagePath} alt="" />
-                  <button type="button" className="remove-btn" onClick={() => removeImage(image)}>
-                    ✕
-                  </button>
+                  <button type="button" className="remove-btn" onClick={() => removeImage(image)}>✕</button>
                 </div>
               );
             })}

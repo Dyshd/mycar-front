@@ -9,7 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { propertySquare, propertyYears } from '../../config';
 import { PropertyLocation, PropertyType } from '../../enums/property.enum';
 import { PropertiesInquiry } from '../../types/property/property.input';
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
 const style = {
@@ -37,6 +37,10 @@ const thisYear = new Date().getFullYear();
 interface HeaderFilterProps {
 	initialInput: PropertiesInquiry;
 }
+const pushWithInput = async (next: PropertiesInquiry) => {
+	const encoded = encodeURIComponent(JSON.stringify(next));
+	await router.push(`/property?input=${encoded}`, undefined, { scroll: false });
+};
 
 type DealMode = 'all' | 'sale' | 'rent';
 
@@ -45,6 +49,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 	const device = useDeviceDetect();
 	const { t } = useTranslation('common');
 	const router = useRouter();
+
 
 	// ✅ main filter
 	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(initialInput);
@@ -505,7 +510,7 @@ HeaderFilter.defaultProps = {
 		page: 1,
 		limit: 9,
 		search: {
-			squaresRange: { start: 0, end: 500 },
+			// ❌ squaresRange olib tashlandi (km filtr bo‘lib qolmasin)
 			pricesRange: { start: 0, end: 2000000 },
 		},
 	},

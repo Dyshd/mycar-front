@@ -1,15 +1,16 @@
-import React, { useMemo } from 'react';
-import { Stack, Box, Divider, Typography, IconButton } from '@mui/material';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { Property } from '../../types/property/property';
-import { REACT_APP_API_URL, topPropertyRank } from '../../config';
-import { formatterStr, getRentUnit } from '../../utils';
-import { useReactiveVar } from '@apollo/client';
-import { userVar } from '../../../apollo/store';
-import { useRouter } from 'next/router';
+import React, { useMemo } from "react";
+import { Stack, Box, Divider, Typography, IconButton } from "@mui/material";
+import useDeviceDetect from "../../hooks/useDeviceDetect";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import { Property } from "../../types/property/property";
+import { REACT_APP_API_URL, topPropertyRank } from "../../config";
+import { formatterStr, getRentUnit } from "../../utils";
+import { useReactiveVar } from "@apollo/client";
+import { userVar } from "../../../apollo/store";
+import { useRouter } from "next/router";
+import { transmissionLabel } from "../../utils/transmission";
 
 interface PropertyBigCardProps {
   property: Property;
@@ -29,34 +30,23 @@ const PropertyBigCard = (props: PropertyBigCardProps) => {
 
   const liked = !!property?.meLiked?.[0]?.myFavorite;
 
-  const goPropertyDetailPage = () => {
-    if (!property?._id) return;
-    router.push(`/property/detail?id=${property._id}`);
+  const goPropertyDetatilPage = (propertyId: string) => {
+    router.push(`/property/detail?id=${propertyId}`);
   };
 
-  if (device === 'mobile') return <div>PROPERTY BIG CARD MOBILE</div>;
+  if (device === "mobile") return <div>APARTMEND BIG CARD</div>;
 
-  // ✅ unit (rent bo‘lsa)
   const unit = useMemo(() => {
-    if (!property?.propertyRent) return '';
+    if (!property?.propertyRent) return "";
     const u = getRentUnit((property as any)?.propertyRentPeriod);
-    return u || '/month';
+    return u || "/month";
   }, [property?.propertyRent, (property as any)?.propertyRentPeriod]);
 
-  // ✅ 0 bo‘lsa yashirish uchun
-  const beds = property?.propertyBeds ?? 0;
-  const rooms = property?.propertyRooms ?? 0;
-  const square = property?.propertySquare ?? 0;
-  const views = property?.propertyViews ?? 0;
-  const likes = property?.propertyLikes ?? 0;
-
   return (
-    <Stack className="property-big-card-box" onClick={goPropertyDetailPage}>
-      <Box component={'div'} className={'card-img'} style={{ backgroundImage: bg }}>
-        <div className="img-overlay" />
-
+    <Stack className="property-big-card-box" onClick={() => goPropertyDetatilPage(property?._id)}>
+      <Box component={"div"} className={"card-img"} style={{ backgroundImage: bg }}>
         {property?.propertyRank && property?.propertyRank >= topPropertyRank && (
-          <div className={'status'}>
+          <div className={"status"}>
             <img src="/img/icons/electricity.svg" alt="" />
             <span>top</span>
           </div>
@@ -64,89 +54,64 @@ const PropertyBigCard = (props: PropertyBigCardProps) => {
 
         <div className="auto-price">
           <b>${formatterStr(property?.propertyPrice)}</b>
-          {unit ? <span className="unit">{unit}</span> : null}
+          {unit && <span className="unit">{unit}</span>}
         </div>
       </Box>
 
-      <Box component={'div'} className={'info'}>
-        <strong className={'title'}>{property?.propertyTitle}</strong>
-        <p className={'desc'}>{property?.propertyAddress}</p>
+      <Box component={"div"} className={"info"}>
+        <strong className={"title"}>{property?.propertyTitle}</strong>
+        <p className={"desc"}>{property?.propertyAddress}</p>
 
-        <div className="options-grid">
-          {beds > 0 && (
-            <div className="opt">
-              <img src="/img/icons/bed.svg" alt="" />
-              <p>
-                <b>{beds}</b> Seats
-              </p>
-            </div>
-          )}
-
-          {rooms > 0 && (
-            <div className="opt">
-              <img src="/img/icons/room.svg" alt="" />
-              <p>
-                <b>{rooms}</b> Gear
-              </p>
-            </div>
-          )}
-
-          {square > 0 && (
-            <div className="opt">
-              <img src="/img/icons/expand.svg" alt="" />
-              <p>
-                <b>{square}</b> km
-              </p>
-            </div>
-          )}
+        <div className="options">
+          <img src="/img/icons/bed.svg" alt="" />
+          <p>
+            <b>{property?.propertyBeds ?? 0}</b> Seats
+          </p>
         </div>
 
-        <Divider className="divider" />
+        <div className="options">
+          <img src="/img/icons/room.svg" alt="" />
+          <p>
+            <b>{transmissionLabel(property?.propertyRooms)}</b>
+          </p>
+        </div>
 
-        <div className={'bott'}>
-          <div className="tags">
-            <span className={property?.propertyRent ? 'tag on' : 'tag'}>
-              {property?.propertyRent ? 'Lease' : 'Sale'}
-            </span>
+        <div className="options">
+          <img src="/img/icons/expand.svg" alt="" />
+          <p>
+            <b>{property?.propertySquare ?? 0}</b> km
+          </p>
+        </div>
 
-            <span className={property?.propertyBarter ? 'tag on' : 'tag'}>
-              {property?.propertyBarter ? 'Trade' : 'No Trade'}
-            </span>
+        <Divider sx={{ mt: "15px", mb: "17px" }} />
+
+        <div className={"bott"}>
+          <div>
+            {property?.propertyRent ? <p>Lease</p> : <span>Sale</span>}
+            {property?.propertyBarter ? <p>Trade</p> : <span>No Trade</span>}
           </div>
 
           <div className="buttons-box">
-            {/* ✅ Views 0 bo‘lsa chiqmaydi */}
-            {views > 0 && (
-              <div className="mini-pill">
-                <IconButton
-                  className="mini-btn"
-                  color={'default'}
-                  onClick={(e: { stopPropagation: () => void; }) => {
-                    e.stopPropagation();
-                  }}
-                >
-                  <RemoveRedEyeIcon />
-                </IconButton>
-                <Typography className="cnt">{views}</Typography>
-              </div>
-            )}
+            <IconButton
+              color={"default"}
+              onClick={(e: { stopPropagation: () => void; }) => {
+                e.stopPropagation();
+              }}
+            >
+              <RemoveRedEyeIcon />
+            </IconButton>
+            <Typography className="view-cnt">{property?.propertyViews ?? 0}</Typography>
 
-            {/* ✅ Likes 0 bo‘lsa chiqmaydi */}
-            {likes > 0 && (
-              <div className="mini-pill">
-                <IconButton
-                  className="mini-btn"
-                  color={'default'}
-                  onClick={(e: { stopPropagation: () => void; }) => {
-                    e.stopPropagation();
-                    likePropertyHandler && likePropertyHandler(user, property?._id);
-                  }}
-                >
-                  {liked ? <FavoriteIcon className="liked" /> : <FavoriteBorderIcon />}
-                </IconButton>
-                <Typography className="cnt">{likes}</Typography>
-              </div>
-            )}
+            <IconButton
+              color={"default"}
+              onClick={(e: { stopPropagation: () => void; }) => {
+                e.stopPropagation();
+                likePropertyHandler && likePropertyHandler(user, property?._id);
+              }}
+            >
+              {liked ? <FavoriteIcon style={{ color: "#EB6753" }} /> : <FavoriteBorderIcon />}
+            </IconButton>
+            <Typography className="view-cnt">{property?.propertyLikes ?? 0}</Typography>
           </div>
         </div>
       </Box>

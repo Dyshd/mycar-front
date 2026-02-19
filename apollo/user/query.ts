@@ -95,14 +95,16 @@ export const GET_PROPERTY = gql`
 			propertySquare
 			propertyBeds
 			propertyRooms
+
+			# ✅ NEW
+			propertyTransmission
+
 			propertyViews
 			propertyLikes
 			propertyImages
 			propertyDesc
 			propertyBarter
 			propertyRent
-
-			# ✅ QO‘SHING
 			propertyRentPeriod
 
 			memberId
@@ -111,77 +113,108 @@ export const GET_PROPERTY = gql`
 			constructedAt
 			createdAt
 			updatedAt
-			memberData { _id memberType memberStatus memberAuthType memberPhone memberNick memberFullName memberImage memberAddress memberDesc memberWarnings memberBlocks memberPoints memberLikes memberViews deletedAt createdAt updatedAt accessToken }
-			meLiked { memberId likeRefId myFavorite }
+
+			memberData {
+				_id
+				memberType
+				memberStatus
+				memberAuthType
+				memberPhone
+				memberNick
+				memberFullName
+				memberImage
+				memberAddress
+				memberDesc
+				memberWarnings
+				memberBlocks
+				memberPoints
+				memberLikes
+				memberViews
+				deletedAt
+				createdAt
+				updatedAt
+				accessToken
+			}
+			meLiked {
+				memberId
+				likeRefId
+				myFavorite
+			}
 		}
 	}
 `;
 
 export const GET_PROPERTIES = gql`
-  query GetProperties($input: PropertiesInquiry!) {
-    getProperties(input: $input) {
-      list {
-        _id
-        propertyType
-        propertyStatus
-        propertyLocation
-        propertyAddress
-        propertyTitle
-        propertyPrice
-        propertySquare
-        propertyBeds
-        propertyRooms
-        propertyViews
-        propertyLikes
-        propertyComments
-        propertyRank
-        propertyImages
-        propertyDesc
-        propertyBarter
-        propertyRent
-		propertyRentPeriod   
-        memberId
-        soldAt
-        deletedAt
-        constructedAt
-        createdAt
-        updatedAt
-        memberData {
-          _id
-          memberType
-          memberStatus
-          memberAuthType
-          memberPhone
-          memberNick
-          memberFullName
-          memberImage
-          memberAddress
-          memberDesc
-          memberProperties
-          memberFollowers
-          memberFollowings
-          memberPoints
-          memberLikes
-          memberViews
-          memberComments
-          memberRank
-          memberWarnings
-          memberBlocks
-          deletedAt
-          createdAt
-          updatedAt
-        }
-        meLiked {
-          memberId
-          likeRefId
-          myFavorite
-        }
-      }
-      metaCounter {
-        total
-      }
-    }
-  }
+	query GetProperties($input: PropertiesInquiry!) {
+		getProperties(input: $input) {
+			list {
+				_id
+				propertyType
+				propertyStatus
+				propertyLocation
+				propertyAddress
+				propertyTitle
+				propertyPrice
+				propertySquare
+				propertyBeds
+				propertyRooms
+
+				# ✅ NEW
+				propertyTransmission
+
+				propertyViews
+				propertyLikes
+				propertyComments
+				propertyRank
+				propertyImages
+				propertyDesc
+				propertyBarter
+				propertyRent
+				propertyRentPeriod
+
+				memberId
+				soldAt
+				deletedAt
+				constructedAt
+				createdAt
+				updatedAt
+
+				memberData {
+					_id
+					memberType
+					memberStatus
+					memberAuthType
+					memberPhone
+					memberNick
+					memberFullName
+					memberImage
+					memberAddress
+					memberDesc
+					memberProperties
+					memberFollowers
+					memberFollowings
+					memberPoints
+					memberLikes
+					memberViews
+					memberComments
+					memberRank
+					memberWarnings
+					memberBlocks
+					deletedAt
+					createdAt
+					updatedAt
+				}
+				meLiked {
+					memberId
+					likeRefId
+					myFavorite
+				}
+			}
+			metaCounter {
+				total
+			}
+		}
+	}
 `;
 
 export const GET_AGENT_PROPERTIES = gql`
@@ -198,12 +231,18 @@ export const GET_AGENT_PROPERTIES = gql`
 				propertySquare
 				propertyBeds
 				propertyRooms
+
+				# ✅ NEW
+				propertyTransmission
+
 				propertyViews
 				propertyLikes
 				propertyImages
 				propertyDesc
 				propertyBarter
 				propertyRent
+				propertyRentPeriod
+
 				memberId
 				soldAt
 				deletedAt
@@ -232,6 +271,10 @@ export const GET_FAVORITES = gql`
 				propertySquare
 				propertyBeds
 				propertyRooms
+
+				# ✅ NEW
+				propertyTransmission
+
 				propertyViews
 				propertyLikes
 				propertyComments
@@ -240,12 +283,15 @@ export const GET_FAVORITES = gql`
 				propertyDesc
 				propertyBarter
 				propertyRent
+				propertyRentPeriod
+
 				memberId
 				soldAt
 				deletedAt
 				constructedAt
 				createdAt
 				updatedAt
+
 				memberData {
 					_id
 					memberType
@@ -295,6 +341,10 @@ export const GET_VISITED = gql`
 				propertySquare
 				propertyBeds
 				propertyRooms
+
+				# ✅ NEW
+				propertyTransmission
+
 				propertyViews
 				propertyLikes
 				propertyComments
@@ -303,12 +353,15 @@ export const GET_VISITED = gql`
 				propertyDesc
 				propertyBarter
 				propertyRent
+				propertyRentPeriod
+
 				memberId
 				soldAt
 				deletedAt
 				constructedAt
 				createdAt
 				updatedAt
+
 				memberData {
 					_id
 					memberType
@@ -396,54 +449,53 @@ export const GET_BOARD_ARTICLE = gql`
 
 export const GET_BOARD_ARTICLES = gql`
 	query GetBoardArticles($input: BoardArticlesInquiry!) {
-  getBoardArticles(input: $input) {
-    list {
-      _id
-      articleCategory
-      articleStatus
-      articleTitle
-      articleContent
-      articleImage
-      articleViews
-      articleLikes
-      articleComments
-      memberId
-      createdAt
-      updatedAt
-      meLiked {
-        memberId
-        likeRefId
-        myFavorite
-      }
-      memberData {
-        _id
-        memberType
-        memberStatus
-        memberAuthType
-        memberPhone
-        memberNick
-        memberFullName
-        memberImage
-        memberAddress
-        memberDesc
-        memberWarnings
-        memberBlocks
-        memberProperties
-        memberRank
-        memberPoints
-        memberLikes
-        memberViews
-        deletedAt
-        createdAt
-        updatedAt
-      }
-    }
-    metaCounter {
-      total
-    }
-  }
-}
-
+		getBoardArticles(input: $input) {
+			list {
+				_id
+				articleCategory
+				articleStatus
+				articleTitle
+				articleContent
+				articleImage
+				articleViews
+				articleLikes
+				articleComments
+				memberId
+				createdAt
+				updatedAt
+				meLiked {
+					memberId
+					likeRefId
+					myFavorite
+				}
+				memberData {
+					_id
+					memberType
+					memberStatus
+					memberAuthType
+					memberPhone
+					memberNick
+					memberFullName
+					memberImage
+					memberAddress
+					memberDesc
+					memberWarnings
+					memberBlocks
+					memberProperties
+					memberRank
+					memberPoints
+					memberLikes
+					memberViews
+					deletedAt
+					createdAt
+					updatedAt
+				}
+			}
+			metaCounter {
+				total
+			}
+		}
+	}
 `;
 
 /**************************
@@ -496,6 +548,7 @@ export const GET_COMMENTS = gql`
 /**************************
  *         FOLLOW        *
  *************************/
+
 export const GET_MEMBER_FOLLOWERS = gql`
 	query GetMemberFollowers($input: FollowInquiry!) {
 		getMemberFollowers(input: $input) {

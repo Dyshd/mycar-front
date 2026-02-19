@@ -33,6 +33,9 @@ import { Direction, Message } from '../../libs/enums/common.enum';
 import { CREATE_COMMENT, LIKE_TARGET_PROPERTY } from '../../apollo/user/mutation';
 import { sweetErrorHandling, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 
+// ✅ SHUNI QO‘SH
+import { transmissionLabel } from '../../libs/utils/transmission';
+
 SwiperCore.use([Autoplay, Navigation, Pagination]);
 
 export const getStaticProps = async ({ locale }: any) => ({
@@ -41,24 +44,22 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
-// --- One place labels (backend maydonlar o‘zgarmaydi)
-const getTransmissionLabel = (rooms?: any) => {
-	const v = Number(rooms);
-	if (!Number.isFinite(v) || v <= 0) return 'N/A';
-	if (v === 1) return 'Manual';
-	if (v === 2) return 'Automatic';
-	if (v === 3) return 'CVT';
-	return `${v} Gear`;
-};
+/** =========================
+ * DISPLAY HELPERS (UI only)
+ * Backend fieldlar o‘zgarmaydi
+ * ========================= */
+
 const getSeatsLabel = (beds?: any) => {
 	const v = Number(beds);
 	if (!Number.isFinite(v) || v <= 0) return 'N/A';
 	return `${v} Seats`;
 };
+
 const getMileageLabel = (square?: any) => {
+	// AddProperty’da endi qo‘lda yoziladigan km -> propertySquare’ga tushyapti
 	const v = Number(square);
 	if (!Number.isFinite(v) || v <= 0) return 'N/A';
-	return `${v.toLocaleString()} km`;
+	return `${v.toLocaleString('en-US')} km`;
 };
 
 const PropertyDetail: NextPage = ({ initialComment }: any) => {
@@ -104,10 +105,7 @@ const PropertyDetail: NextPage = ({ initialComment }: any) => {
 	}, [router.query.id]);
 
 	// 2) GET_PROPERTY
-	const {
-		loading: getPropertyLoading,
-		refetch: getPropertyRefetch,
-	} = useQuery(GET_PROPERTY, {
+	const { loading: getPropertyLoading, refetch: getPropertyRefetch } = useQuery(GET_PROPERTY, {
 		fetchPolicy: 'network-only',
 		variables: { input: propertyId },
 		skip: !propertyId,
@@ -120,7 +118,7 @@ const PropertyDetail: NextPage = ({ initialComment }: any) => {
 		},
 	});
 
-	// 3) Destination query variables (property kelgandan keyin)
+	// 3) similar list vars (property kelgandan keyin)
 	const destinationVariables = useMemo(() => {
 		const loc = property?.propertyLocation ? [property.propertyLocation] : [];
 		return {
@@ -134,12 +132,10 @@ const PropertyDetail: NextPage = ({ initialComment }: any) => {
 		};
 	}, [property?.propertyLocation]);
 
-	const {
-		refetch: getPropertiesRefetch,
-	} = useQuery(GET_PROPERTIES, {
+	const { refetch: getPropertiesRefetch } = useQuery(GET_PROPERTIES, {
 		fetchPolicy: 'cache-and-network',
 		variables: destinationVariables,
-		skip: !propertyId || !property?.propertyLocation, // ✅ FIX: property kelmaguncha query yo‘q
+		skip: !propertyId || !property?.propertyLocation,
 		notifyOnNetworkStatusChange: true,
 		onCompleted(data: T) {
 			if (data?.getProperties?.list) setDestinationProperties(data.getProperties.list);
@@ -147,9 +143,7 @@ const PropertyDetail: NextPage = ({ initialComment }: any) => {
 	});
 
 	// 4) comments
-	const {
-		refetch: getCommentsRefetch,
-	} = useQuery(GET_COMMENTS, {
+	const { refetch: getCommentsRefetch } = useQuery(GET_COMMENTS, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input: initialComment },
 		skip: !commentInquiry.search.commentRefId,
@@ -174,7 +168,6 @@ const PropertyDetail: NextPage = ({ initialComment }: any) => {
 
 			await likeTargetProperty({ variables: { input: id } });
 
-			// refresh detail + similar list
 			await getPropertyRefetch({ input: id });
 			if (property?.propertyLocation) {
 				await getPropertiesRefetch(destinationVariables);
@@ -187,7 +180,7 @@ const PropertyDetail: NextPage = ({ initialComment }: any) => {
 		}
 	};
 
-	const commentPaginationChangeHandler = (event: ChangeEvent<unknown>, value: number) => {
+	const commentPaginationChangeHandler = (_: ChangeEvent<unknown>, value: number) => {
 		setCommentInquiry((prev) => ({ ...prev, page: value }));
 	};
 
@@ -256,9 +249,7 @@ const PropertyDetail: NextPage = ({ initialComment }: any) => {
 											</>
 										)}
 
-										{!property?.propertyRent && !property?.propertyBarter && (
-											<Typography className={'buy-rent'}>Sale</Typography>
-										)}
+										{!property?.propertyRent && !property?.propertyBarter && <Typography className={'buy-rent'}>Sale</Typography>}
 									</Stack>
 
 									<Stack className={'divider'} />
@@ -276,7 +267,8 @@ const PropertyDetail: NextPage = ({ initialComment }: any) => {
 
 									<Stack className="option">
 										<img src="/img/icons/room.svg" alt="" />
-										<Typography>{getTransmissionLabel(property?.propertyRooms)}</Typography>
+										{/* ✅ SHU YER O‘ZGARDI */}
+										<Typography>{transmissionLabel(property?.propertyRooms)}</Typography>
 									</Stack>
 
 									<Stack className="option">
@@ -346,7 +338,8 @@ const PropertyDetail: NextPage = ({ initialComment }: any) => {
 									</Stack>
 									<Stack className={'option-includes'}>
 										<Typography className={'title'}>Transmission</Typography>
-										<Typography className={'option-data'}>{getTransmissionLabel(property?.propertyRooms)}</Typography>
+										{/* ✅ SHU YER O‘ZGARDI */}
+										<Typography className={'option-data'}>{transmissionLabel(property?.propertyRooms)}</Typography>
 									</Stack>
 								</Stack>
 
@@ -393,7 +386,8 @@ const PropertyDetail: NextPage = ({ initialComment }: any) => {
 
 											<Box component={'div'} className={'info'}>
 												<Typography className={'title'}>Transmission</Typography>
-												<Typography className={'data'}>{getTransmissionLabel(property?.propertyRooms)}</Typography>
+												{/* ✅ SHU YER O‘ZGARDI */}
+												<Typography className={'data'}>{transmissionLabel(property?.propertyRooms)}</Typography>
 											</Box>
 
 											<Box component={'div'} className={'info'}>
@@ -426,7 +420,6 @@ const PropertyDetail: NextPage = ({ initialComment }: any) => {
 								</Stack>
 							</Stack>
 
-							{/* MAP/Address qoldirdim (sen backendda address/location bilan bog‘laysan) */}
 							<Stack className={'address-config'}>
 								<Typography className={'title'}>Address</Typography>
 								<Stack className={'map-box'}>
@@ -487,7 +480,6 @@ const PropertyDetail: NextPage = ({ initialComment }: any) => {
 							</Stack>
 						</Stack>
 
-						{/* RIGHT CONTACT */}
 						<Stack className={'right-config'}>
 							<Stack className={'info-box'}>
 								<Typography className={'main-title'}>Get More Information</Typography>
@@ -537,7 +529,6 @@ const PropertyDetail: NextPage = ({ initialComment }: any) => {
 						</Stack>
 					</Stack>
 
-					{/* SIMILAR */}
 					{destinationProperties.length !== 0 && (
 						<Stack className={'similar-properties-config'}>
 							<Stack className={'title-pagination-box'}>
