@@ -31,7 +31,7 @@ const withLayoutFull = (Component: any) => {
 			return (
 				<>
 					<Head>
-						<title>Nestar</title>
+						<title>MyCar</title>
 						<meta name={'title'} content={`Nestar`} />
 					</Head>
 					<Stack id="mobile-wrap">
@@ -51,9 +51,9 @@ const withLayoutFull = (Component: any) => {
 			);
 		} else {
 			return (
-				<>
+				<> 
 					<Head>
-						<title>Nestar</title>
+						<title>MyCar</title>
 						<meta name={'title'} content={`Nestar`} />
 					</Head>
 					<Stack id="pc-wrap">

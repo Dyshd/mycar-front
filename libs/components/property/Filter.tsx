@@ -23,6 +23,9 @@ import { TRANSMISSIONS } from "../../utils/transmission";
 
 const MenuProps = { PaperProps: { style: { maxHeight: "220px" } } };
 
+// ✅ Mileage max limit
+const MAX_MILEAGE = 5000000;
+
 interface FilterType {
 	searchFilter: PropertiesInquiry;
 	setSearchFilter: any;
@@ -46,15 +49,17 @@ const Filter = (props: FilterType) => {
 		},
 		[router]
 	);
+
+	// ✅ TRANSMISSION FILTER (roomsList)
 	const transmissionSelectHandler = (value: number) => {
 		setSearchFilter((prev: any) => {
 			const prevList = prev?.search?.roomsList || [];
-
-			let next;
+			let next: any;
 
 			if (value === 0) {
 				next = {
 					...prev,
+					page: 1,
 					search: {
 						...prev.search,
 						roomsList: undefined,
@@ -63,14 +68,12 @@ const Filter = (props: FilterType) => {
 			} else {
 				let newList = [...prevList];
 
-				if (newList.includes(value)) {
-					newList = newList.filter((v) => v !== value);
-				} else {
-					newList.push(value);
-				}
+				if (newList.includes(value)) newList = newList.filter((v) => v !== value);
+				else newList.push(value);
 
 				next = {
 					...prev,
+					page: 1,
 					search: {
 						...prev.search,
 						roomsList: newList,
@@ -78,20 +81,20 @@ const Filter = (props: FilterType) => {
 				};
 			}
 
-			pushWithInput(next); // ✅ filter ishlashi uchun muhim
-
+			pushWithInput(next);
 			return next;
 		});
 	};
 
+	// ✅ SEATS FILTER (bedsList) - single select
 	const seatsSelectHandler = useCallback(
 		async (seats: number) => {
-			const next: PropertiesInquiry = { ...searchFilter, search: { ...(searchFilter.search || {}) } };
+			const next: PropertiesInquiry = { ...searchFilter, search: { ...(searchFilter.search || {}) }, page: 1 };
 
 			if (seats === 0) {
 				delete (next.search as any).bedsList;
 			} else {
-				(next.search as any).bedsList = [seats]; // single select
+				(next.search as any).bedsList = [seats];
 			}
 
 			setSearchFilter(next);
@@ -105,7 +108,7 @@ const Filter = (props: FilterType) => {
 			const isChecked = e.target.checked;
 			const value = e.target.value;
 
-			const next: PropertiesInquiry = { ...searchFilter, search: { ...(searchFilter.search || {}) } };
+			const next: PropertiesInquiry = { ...searchFilter, search: { ...(searchFilter.search || {}) }, page: 1 };
 			const cur = ((next.search as any).locationList || []) as string[];
 
 			(next.search as any).locationList = isChecked ? [...cur, value] : cur.filter((x) => x !== value);
@@ -121,7 +124,7 @@ const Filter = (props: FilterType) => {
 			const isChecked = e.target.checked;
 			const value = e.target.value;
 
-			const next: PropertiesInquiry = { ...searchFilter, search: { ...(searchFilter.search || {}) } };
+			const next: PropertiesInquiry = { ...searchFilter, search: { ...(searchFilter.search || {}) }, page: 1 };
 			const cur = ((next.search as any).typeList || []) as string[];
 
 			(next.search as any).typeList = isChecked ? [...cur, value] : cur.filter((x) => x !== value);
@@ -137,7 +140,7 @@ const Filter = (props: FilterType) => {
 			const isChecked = e.target.checked;
 			const value = e.target.value;
 
-			const next: PropertiesInquiry = { ...searchFilter, search: { ...(searchFilter.search || {}) } };
+			const next: PropertiesInquiry = { ...searchFilter, search: { ...(searchFilter.search || {}) }, page: 1 };
 			const cur = ((next.search as any).options || []) as string[];
 
 			(next.search as any).options = isChecked ? [...cur, value] : cur.filter((x) => x !== value);
@@ -148,12 +151,13 @@ const Filter = (props: FilterType) => {
 		[searchFilter, setSearchFilter, pushWithInput]
 	);
 
+	// ✅ MILEAGE RANGE FILTER (squaresRange) - MAX = 5,000,000
 	const propertySquareHandler = useCallback(
 		async (e: any, type: "start" | "end") => {
 			const value = Number(e.target.value);
 
-			const next: PropertiesInquiry = { ...searchFilter, search: { ...(searchFilter.search || {}) } };
-			const cur = (next.search as any).squaresRange || { start: 0, end: 500 };
+			const next: PropertiesInquiry = { ...searchFilter, search: { ...(searchFilter.search || {}) }, page: 1 };
+			const cur = (next.search as any).squaresRange || { start: 0, end: MAX_MILEAGE };
 
 			(next.search as any).squaresRange = { ...cur, [type]: value };
 
@@ -165,7 +169,7 @@ const Filter = (props: FilterType) => {
 
 	const propertyPriceHandler = useCallback(
 		async (value: number, type: "start" | "end") => {
-			const next: PropertiesInquiry = { ...searchFilter, search: { ...(searchFilter.search || {}) } };
+			const next: PropertiesInquiry = { ...searchFilter, search: { ...(searchFilter.search || {}) }, page: 1 };
 			const cur = (next.search as any).pricesRange || { start: 0, end: 0 };
 
 			(next.search as any).pricesRange = { ...cur, [type]: Number(value) };
@@ -178,8 +182,17 @@ const Filter = (props: FilterType) => {
 
 	const refreshHandler = async () => {
 		setSearchText("");
-		setSearchFilter(initialInput);
-		await pushWithInput(initialInput);
+		// ✅ reset qilganda ham mileage max 5,000,000 bo‘lsin
+		const resetInput: any = {
+			...initialInput,
+			page: 1,
+			search: {
+				...(initialInput.search || {}),
+				squaresRange: { start: 0, end: MAX_MILEAGE },
+			},
+		};
+		setSearchFilter(resetInput);
+		await pushWithInput(resetInput);
 	};
 
 	const selectedLocationCount = useMemo(
@@ -275,7 +288,7 @@ const Filter = (props: FilterType) => {
 
 			{/* TYPE */}
 			<Stack className={"filter-card"}>
-				<Typography className={"title"}>Car Type</Typography>
+				<Typography className={"title"}>Fuel Type</Typography>
 
 				<Stack className="two-col">
 					{propertyType.map((type: string) => (
@@ -318,27 +331,6 @@ const Filter = (props: FilterType) => {
 				</Stack>
 			</Stack>
 
-			{/* SEATS */}
-			{/* <Stack className={"find-your-home"} mb={"30px"}>
-				<Typography className={"title"}>Seats</Typography>
-
-				<Stack className="button-group cars">
-					<Button className={!searchFilter?.search?.bedsList ? "active" : ""} onClick={() => seatsSelectHandler(0)}>
-						Any
-					</Button>
-
-					{[2, 4, 5, 7, 8].map((s) => (
-						<Button
-							key={s}
-							className={(searchFilter?.search?.bedsList || []).includes(s) ? "active" : ""}
-							onClick={() => seatsSelectHandler(s)}
-						>
-							{s}
-						</Button>
-					))}
-				</Stack>
-			</Stack> */}
-
 			{/* OPTIONS */}
 			<Stack className={"filter-card"}>
 				<Typography className={"title"}>Options</Typography>
@@ -374,7 +366,7 @@ const Filter = (props: FilterType) => {
 				</Stack>
 			</Stack>
 
-			{/* MILEAGE RANGE (siz xohlasangiz select emas input qilamiz, lekin hozircha sizdagi ko‘rinish) */}
+			{/* MILEAGE RANGE */}
 			<Stack className={"filter-card"}>
 				<Typography className={"title"}>Mileage range (km)</Typography>
 
@@ -391,7 +383,7 @@ const Filter = (props: FilterType) => {
 								<MenuItem
 									value={square}
 									key={square}
-									disabled={(((searchFilter?.search as any)?.squaresRange?.end || 500) as number) < square}
+									disabled={(((searchFilter?.search as any)?.squaresRange?.end || MAX_MILEAGE) as number) < square}
 								>
 									{square}
 								</MenuItem>
@@ -404,7 +396,7 @@ const Filter = (props: FilterType) => {
 					<FormControl className="range-select">
 						<InputLabel>Max</InputLabel>
 						<Select
-							value={((searchFilter?.search as any)?.squaresRange?.end ?? 500) as any}
+							value={((searchFilter?.search as any)?.squaresRange?.end ?? MAX_MILEAGE) as any}
 							label="Max"
 							onChange={(e: any) => propertySquareHandler(e, "end")}
 							MenuProps={MenuProps}

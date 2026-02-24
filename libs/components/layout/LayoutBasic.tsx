@@ -155,7 +155,7 @@ const withLayoutBasic = (Component: any) => {
       return (
         <>
           <Head>
-            <title>Nestar</title>
+            <title>MyCar</title>
             <meta name={'title'} content={`Nestar`} />
           </Head>
 
@@ -179,7 +179,7 @@ const withLayoutBasic = (Component: any) => {
     return (
       <>
         <Head>
-          <title>Nestar</title>
+          <title>MyCar</title>
           <meta name={'title'} content={`Nestar`} />
         </Head>
 

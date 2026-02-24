@@ -221,7 +221,7 @@ PropertyList.defaultProps = {
 		search: {
 			squaresRange: {
 				start: 0,
-				end: 500,
+				end: 500000,
 			},
 			pricesRange: {
 				start: 0,

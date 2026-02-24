@@ -93,8 +93,8 @@ const TrendPropertyCard = ({ property, likePropertyHandler }: TrendPropertyCardP
         {/* bottom floating spec bar */}
         <div className="trendx-floatSpecs">
           <span>{seats} seats</span>
-          <span className="dot">•</span>
-          <span>{doors} Gear</span>
+          {/* <span className="dot">•</span> */}
+          {/* <span>{doors} Gear</span> */}
           <span className="dot">•</span>
           <span>{km} km</span>
         </div>

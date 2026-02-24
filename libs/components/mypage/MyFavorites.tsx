@@ -54,7 +54,7 @@ const MyFavorites: NextPage = () => {
 	};
 
 	if (device === 'mobile') {
-		return <div>NESTAR MY FAVORITES MOBILE</div>;
+		return <div>MyCar MY FAVORITES MOBILE</div>;
 	}
 
 	return (

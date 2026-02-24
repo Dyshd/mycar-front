@@ -205,7 +205,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 				...prev.search,
 				// @ts-ignore
 				squaresRange: {
-					...(prev.search?.squaresRange || { start: 0, end: 500000 }),
+					...(prev.search?.squaresRange || { start: 0, end: 5000000 }),
 					[type]: value,
 				},
 			},
