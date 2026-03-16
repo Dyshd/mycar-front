@@ -1,0 +1,21 @@
+version: '3.3'
+
+services:
+  nestar-next:
+    container_name: nestar-next
+    restart: always
+    image: node:20.10.0
+    ports:
+      - 4000:3000
+    environment:
+      - PORT=3000
+    volumes:
+      - ./:/usr/src/mycar-next
+    working_dir: /usr/src/mycar-next
+    networks:
+      - client-network
+    command: bash -c "yarn install && yarn build && next start -p 3000 -H 0.0.0.0"
+
+networks:
+  client-network:
+    driver: bridge

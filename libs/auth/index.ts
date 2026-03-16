@@ -164,10 +164,7 @@ export const updateUserInfo = (jwtToken: any) => {
     memberViews: claims.memberViews,
     memberWarnings: claims.memberWarnings,
     memberBlocks: claims.memberBlocks,
-    nick: "",
-    type: function (type: any): unknown {
-      throw new Error("Function not implemented.");
-    }
+  
   });
 };
 
@@ -203,9 +200,6 @@ const deleteUserInfo = () => {
     memberViews: 0,
     memberWarnings: 0,
     memberBlocks: 0,
-    nick: "",
-    type: function (type: any): unknown {
-      throw new Error("Function not implemented.");
-    }
+
   });
 };
