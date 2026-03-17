@@ -65,6 +65,7 @@ const Footer = () => {
 		</Box>
 	);
 
+	
 	if (device === 'mobile') {
 		return (
 			<Stack id="footer">
