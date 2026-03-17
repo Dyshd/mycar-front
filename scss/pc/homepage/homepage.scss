@@ -663,27 +663,29 @@
 					}
 				}
 
-				.pagination-box {
-					margin-top: 14px;
+				.right {
 					display: flex;
-					justify-content: center;
-					align-items: center;
-					gap: 18px;
+					flex-direction: row;
+					align-items: flex-end;
 
-					.swiper-pagination-bullet.swiper-pagination-bullet-active {
-						background: #111;
+					.pagination-box {
+						display: flex;
+						flex-direction: row;
+						align-items: center;
 					}
 
-					.swiper-popular-next,
-					.swiper-popular-prev {
-						cursor: pointer;
-						opacity: 0.8;
-						transition: transform 140ms ease, opacity 140ms ease;
+					.swiper-pagination-bullet.swiper-pagination-bullet-active {
+						background: #000;
+					}
 
-						&:hover {
-							transform: translateY(-1px);
-							opacity: 1;
-						}
+					.swiper-popular-next {
+						margin-left: 20px;
+						cursor: pointer;
+					}
+
+					.swiper-popular-prev {
+						margin-right: 20px;
+						cursor: pointer;
 					}
 				}
 			}

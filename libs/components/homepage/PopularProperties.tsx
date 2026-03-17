@@ -110,11 +110,13 @@ const PopularProperties = (props: PopularPropertiesProps) => {
 							})}
 						</Swiper>
 					</Stack>
-					<Stack className={'pagination-box'}>
-						<WestIcon className={'swiper-popular-prev'} />
-						<div className={'swiper-popular-pagination'}></div>
-						<EastIcon className={'swiper-popular-next'} />
-					</Stack>
+					<div className="right">
+						<Stack className="pagination-box">
+							<WestIcon className="swiper-popular-prev" />
+							<div className="swiper-popular-pagination"></div>
+							<EastIcon className="swiper-popular-next" />
+						</Stack>
+					</div>
 				</Stack>
 			</Stack>
 		);
