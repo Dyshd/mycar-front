@@ -71,18 +71,18 @@ const Footer = () => {
 				<Stack className={'footer-container'}>
 					<Stack className={'main'}>
 						<Stack className={'brand'}>
-							<Box className={'logo-row'}>
+							<Box component="div" className={'logo-row'}>
 								<img src="/img/logo/logoWhite.svg" alt="" className={'logo'} />
 								<span className="brand-tag">Find your next ride</span>
 							</Box>
 
-							<Box className={'contact-card'}>
+							<Box component="div" className={'contact-card'}>
 								<span className="muted">Customer care</span>
 								<p className="strong">+82 10 4867 2909</p>
 								<span className="muted">Support (24/7)</span>
 							</Box>
 
-							<Box className={'social-card'}>
+							<Box component="div" className={'social-card'}>
 								<p className="strong">Follow us</p>
 								<Social />
 							</Box>
@@ -120,32 +120,32 @@ const Footer = () => {
 			<Stack className={'footer-container'}>
 				<Stack className={'main'}>
 					<Stack className={'left'}>
-						<Box className={'footer-box'}>
-							<Box className={'logo-row'}>
+						<Box component="div" className={'footer-box'}>
+							<Box component="div" className={'logo-row'}>
 								<img src="/img/logo/mycar-logo.png" alt="" className={'logo'} />
 								<span className="brand-tag">Find your next ride</span>
 							</Box>
 						</Box>
 
-						<Box className={'footer-box'}>
+						<Box component="div" className={'footer-box'}>
 							<span className="muted">total free customer care</span>
 							<p className="strong">+82 10 4867 2909</p>
 						</Box>
 
-						<Box className={'footer-box'}>
+						<Box component="div" className={'footer-box'}>
 							<span className="muted">need live support?</span>
 							<p className="strong">+82 10 4867 2909</p>
 							<span className="muted">We reply fast</span>
 						</Box>
 
-						<Box className={'footer-box'}>
+						<Box component="div" className={'footer-box'}>
 							<p className="strong">follow us on social media</p>
 							<Social />
 						</Box>
 					</Stack>
 
 					<Stack className={'right'}>
-						<Box className={'top'}>
+						<Box component="div" className={'top'}>
 							<strong>Keep yourself up to date</strong>
 							<div className={'subscribe-box'}>
 								<input
@@ -160,7 +160,7 @@ const Footer = () => {
 							</div>
 						</Box>
 
-						<Box className={'bottom'}>
+						<Box component="div"className={'bottom'}>
 							<Links />
 						</Box>
 					</Stack>
